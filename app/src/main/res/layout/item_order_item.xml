@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="#fff"
+    >
+    <ImageView
+        android:id="@+id/iv_order_item_figure"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/new_img_loading_2"
+        />
+    <TextView
+        android:id="@+id/tv_product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="黑巧"
+        android:textColor="#000"
+        />
+    <TextView
+        android:id="@+id/tv_product_quanity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="22dp"
+        android:text="x3"
+        />
+    <TextView
+        android:id="@+id/tv_order_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="40dp"
+        android:text="RMB:242"
+        android:textColor="@color/theme_red"
+        />
+</RelativeLayout>

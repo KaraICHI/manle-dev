@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="7dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:background="#fff"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_hot"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            >
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="13dp"
+                android:background="@drawable/title_shape_red"
+                android:layout_marginRight="8dp"
+                />
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="春如四季奇异果干"
+                android:textColor="#000"
+                android:textSize="12dp"
+                />
+
+        </LinearLayout>
+
+        <View
+             android:layout_width="160dp"
+              android:layout_height="1dp"
+              android:layout_gravity="center_horizontal"
+            android:background="#ccc"
+    />
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RMB"
+                android:textSize="9dp"
+                android:textColor="#ed3f3f"
+                />
+            <TextView
+                android:paddingLeft="10dp"
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="3dp"
+                android:text="88.00"
+                android:textSize="13dp"
+                android:textColor="#ed3f3f" />
+        </LinearLayout>
+
+        </LinearLayout>
+    <CheckBox
+        android:id="@+id/cb_collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/checkbox_selector"
+        android:button="@null"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="150dp"
+        android:visibility="invisible"
+        />
+
+
+</android.support.v7.widget.CardView>

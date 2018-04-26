@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="50dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_community_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="面对疾风吧"
+            android:textColor="#404040" />
+
+        <TextView
+            android:id="@+id/tv_community_addtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="3小时前" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="260dp">
+
+            <!-- put a VideoView/SurfaceView here if you want show Danmaku on top of video-->
+            <ImageView
+                android:id="@+id/iv_community_figure"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_community_saying"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="走过路过不要错过"
+            android:lines="1"
+            android:textColor="#434343" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="#e1e1e1" />
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            >
+            <EditText
+                android:id="@+id/et_send_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:lines="1"
+                android:imeOptions="actionSend"
+                android:background="@drawable/search_home_shape_gray"
+                android:textSize="15sp"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/send_comment_black"
+                android:visibility="gone"
+                />
+
+            <CheckBox
+                android:id="@+id/tv_community_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_toLeftOf="@id/tv_community_comments"
+                android:drawableLeft="@drawable/community_like_selector"
+                android:drawablePadding="10dp"
+                android:button="@null"
+                android:gravity="center_vertical"
+                android:text="1"
+                android:layout_marginRight="20dp"
+                android:checked="false"
+                />
+
+
+            <!--        <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/community_mid_line" />-->
+
+            <RadioButton
+                android:id="@+id/tv_community_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/community_message_icon"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:text="1" />
+
+            <com.opendanmaku.DanmakuView
+                android:id="@+id/danmakuView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignStart="@+id/tv_community_likes"
+                android:layout_marginStart="88dp"
+                app:end_Y_offset="0.8"
+                app:max_row="4"
+                app:max_running_per_row="2"
+                app:pick_interval="500"
+                app:show_debug="false"
+                app:start_Y_offset="0.2" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/ib_new_post_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/new_user_icon_1" />
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/avatar_over"
+        />
+
+</RelativeLayout>

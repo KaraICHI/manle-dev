@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:paddingTop="25dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <ImageButton
+                android:id="@+id/ib_community_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/top_bar_left_back" />
+
+            <TextView
+                android:id="@+id/tv_artical_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="文章标题"
+                android:textColor="#564c4c"
+                android:textSize="18sp" />
+
+
+
+        </LinearLayout>
+        <!--分割线-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeee" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#eee"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
+                    android:layout_marginBottom="20dp"
+                    >
+                    <ImageView
+                        android:id="@+id/iv_article_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg1"
+                        />
+
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp">
+                    <EditText
+                        android:id="@+id/et_artical_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="分享好物"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:textSize="16dp"
+                        />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+
