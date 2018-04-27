@@ -249,7 +249,7 @@
                 android:textSize="12dp"
                 android:textColor="#393b3e" />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/tv_good_info_collection"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -21,9 +21,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                >
 
                 <ImageButton
                     android:id="@+id/ib_goods_list_back"
@@ -45,7 +49,8 @@
                     android:gravity="center_vertical"
                     android:padding="5dp"
                     android:hint="输入搜索信息"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    />
                 <ImageButton
                     android:id="@+id/ib_goods_list_home"
                     android:layout_width="26dp"

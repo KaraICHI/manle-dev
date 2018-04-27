@@ -1,6 +1,7 @@
 package com.manle.saitamall.home.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Created by Administrator on 2016/10/9.
@@ -9,9 +10,9 @@ import java.io.Serializable;
 public class GoodsBean implements Serializable {
 
     private String name;
-    private String cover_price;
+    private BigDecimal cover_price;
     private String figure;
-    private String product_id;
+    private Long product_id;
     private String product_detail;
     private int number = 1;
 
@@ -27,7 +28,7 @@ public class GoodsBean implements Serializable {
     public GoodsBean() {
     }
 
-    public GoodsBean(String name, String cover_price, String figure, String product_id, String product_detail) {
+    public GoodsBean(String name, BigDecimal cover_price, String figure, Long product_id, String product_detail) {
         this.name = name;
         this.cover_price = cover_price;
         this.figure = figure;
@@ -43,12 +44,11 @@ public class GoodsBean implements Serializable {
         this.name = name;
     }
 
-    public String getCover_price() {
-        cover_price.substring(0, cover_price.length() - 1);
+    public BigDecimal getCover_price() {
         return cover_price;
     }
 
-    public void setCover_price(String cover_price) {
+    public void setCover_price(BigDecimal cover_price) {
         this.cover_price = cover_price;
     }
 
@@ -60,11 +60,11 @@ public class GoodsBean implements Serializable {
         this.figure = figure;
     }
 
-    public String getProduct_id() {
+    public Long getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(String product_id) {
+    public void setProduct_id(Long product_id) {
         this.product_id = product_id;
     }
 
@@ -92,18 +92,7 @@ public class GoodsBean implements Serializable {
         this.number = number;
     }
 
-    @Override
-    public String toString() {
-        return "GoodsBean{" +
-                "name='" + name + '\'' +
-                ", cover_price='" + cover_price + '\'' +
-                ", figure='" + figure + '\'' +
-                ", product_id='" + product_id + '\'' +
-                ", number=" + number +
-                ", isEditing=" + isEditing +
-                ", isChildSelected=" + isChildSelected +
-                '}';
-    }
+
 
     public String getProduct_detail() {
         return product_detail;

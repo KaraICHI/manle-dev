@@ -47,6 +47,16 @@
                 android:id="@+id/iv_community_figure"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+            <com.opendanmaku.DanmakuView
+                android:id="@+id/danmakuView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:end_Y_offset="0.8"
+                app:max_row="4"
+                app:max_running_per_row="2"
+                app:pick_interval="500"
+                app:show_debug="false"
+                app:start_Y_offset="0.2" />
 
         </RelativeLayout>
 
@@ -118,18 +128,7 @@
                 android:button="@null"
                 android:text="1" />
 
-            <com.opendanmaku.DanmakuView
-                android:id="@+id/danmakuView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignStart="@+id/tv_community_likes"
-                android:layout_marginStart="88dp"
-                app:end_Y_offset="0.8"
-                app:max_row="4"
-                app:max_running_per_row="2"
-                app:pick_interval="500"
-                app:show_debug="false"
-                app:start_Y_offset="0.2" />
+
         </RelativeLayout>
     </LinearLayout>
 

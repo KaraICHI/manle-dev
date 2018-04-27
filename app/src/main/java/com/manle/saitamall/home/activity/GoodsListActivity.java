@@ -13,6 +13,7 @@ import android.util.JsonToken;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -23,7 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.google.gson.reflect.TypeToken;
+import com.lljjcoder.Constant;
+import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.GoodsInfoActivity;
 import com.manle.saitamall.bean.Product;
@@ -42,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Request;
 
@@ -50,16 +57,77 @@ import static com.zhy.http.okhttp.log.LoggerInterceptor.TAG;
 // 商品列表页面
 public class GoodsListActivity extends Activity implements View.OnClickListener {
 
-    private ImageButton ibGoodsListBack;
-    private EditText tvGoodsListSearch;
-    private ImageButton ibGoodsListHome;
-    private TextView tvGoodsListSort;
-    private LinearLayout llGoodsListPrice;
-    private TextView tvGoodsListPrice;
-    private ImageView ivGoodsListArrow;
-    private TextView tvGoodsListSelect;
-    private RecyclerView recyclerview;
-    private ExpandableListView listView;
+    @Bind(R.id.ib_goods_list_back)
+    ImageButton ibGoodsListBack;
+    @Bind(R.id.tv_goods_list_search)
+    EditText tvGoodsListSearch;
+    @Bind(R.id.ib_goods_list_home)
+    ImageButton ibGoodsListHome;
+    @Bind(R.id.tv_goods_list_sort)
+    TextView tvGoodsListSort;
+    @Bind(R.id.ll_goods_list_price)
+    LinearLayout llGoodsListPrice;
+    @Bind(R.id.tv_goods_list_price)
+    TextView tvGoodsListPrice;
+    @Bind(R.id.iv_goods_list_arrow)
+    ImageView ivGoodsListArrow;
+    @Bind(R.id.tv_goods_list_select)
+    TextView tvGoodsListSelect;
+    @Bind(R.id.recyclerview)
+    RecyclerView recyclerview;
+    @Bind(R.id.expandableListView)
+    ExpandableListView listView;
+
+
+    @Bind(R.id.ll_select_root)
+    LinearLayout ll_select_root;
+    @Bind(R.id.ll_price_root)
+    LinearLayout ll_price_root;
+    @Bind(R.id.ll_theme_root)
+    LinearLayout ll_theme_root;
+    @Bind(R.id.ll_type_root)
+    LinearLayout ll_type_root;
+    @Bind(R.id.ib_drawer_layout_back)
+    Button ib_drawer_layout_back;
+    @Bind(R.id.btn_drawer_layout_cancel)
+    Button btn_drawer_layout_cancel;
+    @Bind(R.id.btn_drawer_type_confirm)
+    Button btn_drawer_type_confirm;
+    @Bind(R.id.btn_drawer_type_cancel)
+    Button btn_drawer_type_cancel;
+    @Bind(R.id.btn_drawer_theme_confirm)
+    Button btn_drawer_theme_confirm;
+    @Bind(R.id.btn_drawer_theme_cancel)
+    Button btn_drawer_theme_cancel;
+    @Bind(R.id.rl_select_price)
+    RelativeLayout rl_select_price;
+    @Bind(R.id.rl_select_recommend_theme)
+    RelativeLayout rl_select_recommend_theme;
+    @Bind(R.id.rl_select_type)
+    RelativeLayout rl_select_type;
+    @Bind(R.id.rl_price_0_5)
+    RelativeLayout rl_price_0_5;
+    @Bind(R.id.rl_price_5_10)
+    RelativeLayout rl_price_5_10;
+    @Bind(R.id.rl_price_10_20)
+    RelativeLayout rl_price_10_20;
+    @Bind(R.id.rl_price_20)
+    RelativeLayout rl_price_20;
+    @Bind(R.id.rl_denify_price)
+    RelativeLayout rl_denify_price;
+    @Bind(R.id.et_price_start)
+    EditText et_price_start;
+    @Bind(R.id.et_price_end)
+    EditText et_price_end;
+    @Bind(R.id.tv_drawer_price)
+    TextView tv_drawer_price;
+    @Bind(R.id.rl_theme_note)
+    RelativeLayout rl_theme_note;
+    @Bind(R.id.dl_left)
+    DrawerLayout dl_left;
+
+    private Long categoryId;
+    private int click_count = 0;
 
     /*    private static final int DEFAULE_STATE = 1;
         private static final int ASC_STATE = 2;
@@ -67,81 +135,15 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     private int childP;
     private int groupP;
 
-    private int click_count = 0;
+
     private ArrayList<String> group;
     private ArrayList<List<String>> child;
     private ExpandableListViewAdapter adapter;
 
-    private LinearLayout ll_select_root;
-    private LinearLayout ll_price_root;
-    private LinearLayout ll_theme_root;
-    private LinearLayout ll_type_root;
-
-    private Button ib_drawer_layout_back;
-    private Button btn_drawer_layout_confirm;
-    private Button btn_drawer_layout_cancel;
-
-    private Button btn_drawer_type_confirm;
-    private Button btn_drawer_type_cancel;
-
-    private Button btn_drawer_theme_confirm;
-    private Button btn_drawer_theme_cancel;
-
-    private RelativeLayout rl_select_price;
-    private RelativeLayout rl_select_recommend_theme;
-    private RelativeLayout rl_select_type;
-    private RelativeLayout rl_price_30_50;
-    private RelativeLayout rl_theme_note;
-    private int position;
-    private String[] urls = new String[]{
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-            Constants.GUODONG_STORE,
-
-    };
     private List<Product> page_data;
     private GoodsListAdapter adapter1;
-    private DrawerLayout dl_left;
 
     private void findViews() {
-        LinearLayout llGoodsListHead = (LinearLayout) findViewById(R.id.ll_goods_list_head);
-        ibGoodsListBack = (ImageButton) findViewById(R.id.ib_goods_list_back);
-        tvGoodsListSearch = (EditText) findViewById(R.id.tv_goods_list_search);
-        ibGoodsListHome = (ImageButton) findViewById(R.id.ib_goods_list_home);
-        tvGoodsListSort = (TextView) findViewById(R.id.tv_goods_list_sort);
-        llGoodsListPrice = (LinearLayout) findViewById(R.id.ll_goods_list_price);
-        tvGoodsListPrice = (TextView) findViewById(R.id.tv_goods_list_price);
-        ivGoodsListArrow = (ImageView) findViewById(R.id.iv_goods_list_arrow);
-        tvGoodsListSelect = (TextView) findViewById(R.id.tv_goods_list_select);
-        recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
-
-        ll_select_root = (LinearLayout) findViewById(R.id.ll_select_root);
-        ll_price_root = (LinearLayout) findViewById(R.id.ll_price_root);
-        ll_theme_root = (LinearLayout) findViewById(R.id.ll_theme_root);
-        ll_type_root = (LinearLayout) findViewById(R.id.ll_type_root);
-
-        ib_drawer_layout_back = (Button) findViewById(R.id.ib_drawer_layout_back);
-        btn_drawer_layout_confirm = (Button) findViewById(R.id.btn_drawer_layout_confirm);
-        btn_drawer_layout_cancel = (Button) findViewById(R.id.btn_drawer_layout_cancel);
-        btn_drawer_type_confirm = (Button) findViewById(R.id.btn_drawer_type_confirm);
-        btn_drawer_type_cancel = (Button) findViewById(R.id.btn_drawer_type_cancel);
-        btn_drawer_theme_confirm = (Button) findViewById(R.id.btn_drawer_theme_confirm);
-        btn_drawer_theme_cancel = (Button) findViewById(R.id.btn_drawer_theme_cancel);
-
-        rl_select_price = (RelativeLayout) findViewById(R.id.rl_select_price);
-        rl_select_recommend_theme = (RelativeLayout) findViewById(R.id.rl_select_recommend_theme);
-        rl_select_type = (RelativeLayout) findViewById(R.id.rl_select_type);
-        rl_price_30_50 = (RelativeLayout) findViewById(R.id.rl_price_30_50);
-        rl_theme_note = (RelativeLayout) findViewById(R.id.rl_theme_note);
-        dl_left = (DrawerLayout) findViewById(R.id.dl_left);
 
         ibGoodsListBack.setOnClickListener(this);
         ibGoodsListHome.setOnClickListener(this);
@@ -155,14 +157,12 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         rl_select_recommend_theme.setOnClickListener(this);
         rl_select_type.setOnClickListener(this);
 
-        btn_drawer_layout_confirm.setOnClickListener(this);
         btn_drawer_layout_cancel.setOnClickListener(this);
         btn_drawer_type_confirm.setOnClickListener(this);
         btn_drawer_type_cancel.setOnClickListener(this);
         btn_drawer_theme_confirm.setOnClickListener(this);
         btn_drawer_theme_cancel.setOnClickListener(this);
 
-        rl_price_30_50.setOnClickListener(this);
         rl_theme_note.setOnClickListener(this);
         tvGoodsListSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -180,13 +180,13 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
             }
         });
 
-        listView = (ExpandableListView) findViewById(R.id.expandableListView);
 
     }
 
 
     @Override
     public void onClick(View v) {
+
         if (v == ibGoodsListBack) {
             finish();
         } else if (v == ibGoodsListHome) {
@@ -211,7 +211,7 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
             } else {
                 // 箭头向上红
                 ivGoodsListArrow.setBackgroundResource(R.drawable.new_price_sort_asc);
-                Collections.sort(page_data, (lhs, rhs) ->  lhs.getCoverPrice().compareTo(rhs.getCoverPrice()));
+                Collections.sort(page_data, (lhs, rhs) -> lhs.getCoverPrice().compareTo(rhs.getCoverPrice()));
                 adapter1.notifyDataSetChanged();
             }
         } else if (v == tvGoodsListSort) {
@@ -246,27 +246,37 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         } else if (v == btn_drawer_layout_cancel) {
             Toast.makeText(GoodsListActivity.this, "取消", Toast.LENGTH_SHORT).show();
 
-            ll_select_root.setVisibility(View.VISIBLE);
-            ib_drawer_layout_back.setVisibility(View.VISIBLE);
+
             showSelectorLayout();
-        } else if (v == btn_drawer_layout_confirm) {
+        } /*else if (v == btn_drawer_layout_confirm) {
             Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
-        } else if (v == rl_price_30_50) {
-            Toast.makeText(GoodsListActivity.this, "123123123", Toast.LENGTH_SHORT).show();
-        } else if (v == rl_theme_note) {
+        }*/ else if (v == rl_price_0_5) {
+            tv_drawer_price.setText("0-5");
+            showSelectorLayout();
+        } else if (v == rl_price_5_10) {
+            tv_drawer_price.setText("5-10");
+            showSelectorLayout();
+        } else if (v == rl_price_10_20) {
+            tv_drawer_price.setText("10-20");
+            showSelectorLayout();
+        } else if (v == rl_price_20) {
+            tv_drawer_price.setText("20+");
+            showSelectorLayout();
+        }else if (v == rl_denify_price) {
+            tv_drawer_price.setText(et_price_start.getText().toString()+"-"+et_price_end.getText().toString());
+            showSelectorLayout();
+        }  else if (v == rl_theme_note) {
             Toast.makeText(GoodsListActivity.this, "123123123", Toast.LENGTH_SHORT).show();
         } else if (v == btn_drawer_type_confirm) {
             Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
         } else if (v == btn_drawer_type_cancel) {
             Toast.makeText(GoodsListActivity.this, "取消", Toast.LENGTH_SHORT).show();
-            ll_select_root.setVisibility(View.VISIBLE);
-            ib_drawer_layout_back.setVisibility(View.VISIBLE);
+
             showSelectorLayout();
         } else if (v == btn_drawer_theme_confirm) {
             Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
         } else if (v == btn_drawer_theme_cancel) {
-            ll_select_root.setVisibility(View.VISIBLE);
-            ib_drawer_layout_back.setVisibility(View.VISIBLE);
+
             showSelectorLayout();
         }
 
@@ -278,56 +288,48 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_list);
+        ButterKnife.bind(this);
         findViews();
 
+
         Intent intent = getIntent();
-        position = intent.getIntExtra("position", -1);
-        if (position!=-1){
+        categoryId = intent.getLongExtra("categoryId", -1l);
+        if (categoryId != -1) {
             getDataFromNet();
         }
         String more_products = intent.getStringExtra("more_products");
-        if (more_products!=null){
+        if (more_products != null) {
             processData(more_products);
         }
-        ll_select_root.setVisibility(View.VISIBLE);
-        ib_drawer_layout_back.setVisibility(View.VISIBLE);
+
         showSelectorLayout();
 
         initListener();
     }
 
     private void initListener() {
-       /* listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(GoodsListActivity.this, "childPosition" + childPosition, Toast.LENGTH_SHORT).show();
-                childP = childPosition;
-                adapter.notifyDataSetChanged();
-                return false;
-            }
+        listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            Toast.makeText(GoodsListActivity.this, "childPosition" + childPosition, Toast.LENGTH_SHORT).show();
+            childP = childPosition;
+            adapter.notifyDataSetChanged();
+            return false;
         });
 
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(GoodsListActivity.this, "groupPosition" + groupPosition, Toast.LENGTH_SHORT).show();
-                groupP = groupPosition;
-                adapter.notifyDataSetChanged();
-                return false;
-            }
+        listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            Toast.makeText(GoodsListActivity.this, "groupPosition" + groupPosition, Toast.LENGTH_SHORT).show();
+            groupP = groupPosition;
+            adapter.notifyDataSetChanged();
+            return false;
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GoodsListActivity.this, "position---" + position, Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        listView.setOnItemClickListener((parent, view, position, id) -> Toast.makeText(GoodsListActivity.this, "position---" + position, Toast.LENGTH_SHORT).show());
     }
 
 
     //筛选页面
     private void showSelectorLayout() {
+        ll_select_root.setVisibility(View.VISIBLE);
+        ib_drawer_layout_back.setVisibility(View.VISIBLE);
         ll_price_root.setVisibility(View.GONE);
         ll_theme_root.setVisibility(View.GONE);
         ll_type_root.setVisibility(View.GONE);
@@ -365,23 +367,31 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         //去掉默认箭头
         listView.setGroupIndicator(null);
         addInfo("全部", new String[]{});
-        addInfo("品牌", new String[]{"德芙", "瑞士莲", "费列罗", "多利是"});
-        addInfo("产地", new String[]{"日本", "韩国", "美国", "中国", "意大利"});
+        addInfo("品牌", new String[]{"巧妈妈", "乐事", "娃哈哈", "卡文哈夫"});
+        addInfo("产地", new String[]{"日本", "韩国", "德国", "中国", "意大利"});
 
 
-        // 这里是控制如果列表没有孩子菜单不展开的效果
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent,
-                                        View v, int groupPosition, long id) {
-                if (child.get(groupPosition).isEmpty()) {// isEmpty没有
-                    return true;
-                } else {
-                    return false;
-                }
+        listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            if (child.get(groupPosition).isEmpty()) {// isEmpty没有
+                return true;
+            } else {
+                return false;
             }
         });
+        listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            if (groupPosition == 1) {
+                page_data = Stream.of(page_data).filter(s -> s.getBrand().equals(child.get(1).get(childPosition))).collect(Collectors.toList());
+                adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data);
+                recyclerview.setAdapter(adapter1);
+            } else if (groupPosition == 2) {
+                page_data = Stream.of(page_data).filter(s -> s.getSupply().equals(child.get(2).get(childPosition))).collect(Collectors.toList());
+                adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data);
+                recyclerview.setAdapter(adapter1);
+            }
+            return true;
+        });
     }
+
 
     /**
      * 添加数据信息
@@ -400,12 +410,10 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
 
     public void getDataFromNet() {
-        if("theme".equals(getIntent().getStringExtra("type"))){
-            Log.e(TAG, "getDataFromNet: type--------------theme"+position);
-        }
         OkHttpUtils
                 .get()
-                .url(urls[position])
+                .url(Constants.PRODUCT_CATRGORY)
+                .addParams("categoryId", categoryId + "")
                 .id(100)
                 .build()
                 .execute(new MyStringCallback());
@@ -448,9 +456,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
     private void processData(String response) {
         Gson gson = new Gson();
-        page_data = gson.fromJson(response,new TypeToken<List<Product>>() {
+        page_data = gson.fromJson(response, new TypeToken<List<Product>>() {
         }.getType());
-        if (page_data!=null){
+        if (page_data != null) {
             GridLayoutManager manager = new GridLayoutManager(GoodsListActivity.this, 2);
             recyclerview.setLayoutManager(manager);
             adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data);
@@ -462,7 +470,7 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
                 String name = data.getProductName();
                 String cover_price = data.getCoverPrice().toString();
                 String figure = data.getFigure();
-                String product_id = data.getId()+"";
+                String product_id = data.getId() + "";
                 String product_detail = data.getDescription();
                 GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
                 Intent intent = new Intent(GoodsListActivity.this, GoodsInfoActivity.class);

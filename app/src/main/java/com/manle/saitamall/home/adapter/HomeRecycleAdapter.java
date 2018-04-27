@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,14 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnLoadImageListener;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.opendanmaku.DanmakuView.TAG;
 
 
 public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -202,10 +206,10 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             //点击事件
             gv_hot.setOnItemClickListener((parent, view, position, id) -> {
-                String cover_price = data.get(position).getCoverPrice() + "";
+                BigDecimal cover_price = data.get(position).getCoverPrice();
                 String name = data.get(position).getProductName();
                 String figure = data.get(position).getFigure();
-                String product_id = data.get(position).getId() + "";
+                Long product_id = data.get(position).getId();
                 String product_detail = data.get(position).getDescription();
                 GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
 
@@ -245,16 +249,16 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             //点击事件
             gv_recommend.setOnItemClickListener((parent, view, position, id) -> {
-                String cover_price = data.get(position).getCoverPrice() + "";
+                BigDecimal cover_price = data.get(position).getCoverPrice();
                 String name = data.get(position).getProductName();
                 String figure = data.get(position).getFigure();
-                String product_id = data.get(position).getId() + "";
+                Long product_id = data.get(position).getId();
                 String product_detail = data.get(position).getDescription();
                 GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
 
                 Intent intent = new Intent(mContext, GoodsInfoActivity.class);
                 intent.putExtra(GOODS_BEAN, goodsBean);
-                intent.putExtra(PRODUCT,data.get(position));
+                intent.putExtra(PRODUCT, data.get(position));
                 mContext.startActivity(intent);
             });
             tv_more_recommend.setOnClickListener(v -> {
@@ -342,15 +346,15 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             adapter.setOnSeckillRecyclerView(position -> {
                 Product listBean = data.get(position);
                 String name = listBean.getProductName();
-                String cover_price = listBean.getCoverPrice() + "";
+                BigDecimal cover_price = listBean.getCoverPrice();
                 String figure = listBean.getFigure();
-                String product_id = listBean.getId() + "";
+                Long product_id = listBean.getId();
                 String product_detail = data.get(position).getDescription();
                 GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
 //
                 Intent intent = new Intent(mContext, GoodsInfoActivity.class);
                 intent.putExtra(GOODS_BEAN, goodsBean);
-                intent.putExtra(PRODUCT,data.get(position));
+                intent.putExtra(PRODUCT, data.get(position));
                 mContext.startActivity(intent);
 
                 // Toast.makeText(mContext, "position:" + position, Toast.LENGTH_SHORT).show();
@@ -411,17 +415,12 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gvChannel.setAdapter(new ChannelAdapter(mContext, channel_info));
 
             //点击事件
-            gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (position <= 4) {
-                        Intent intent = new Intent(mContext, GoodsListActivity.class);
-                        intent.putExtra("position", position);
-                        mContext.startActivity(intent);
-                    } else {
+            gvChannel.setOnItemClickListener((parent, view, position, id) -> {
+                Intent intent = new Intent(mContext, GoodsListActivity.class);
+                intent.putExtra("categoryId", channel_info.get(position).getId());
+                Log.e(TAG, "setData: "+ channel_info.get(position).getId());
+                mContext.startActivity(intent);
 
-                    }
-                }
             });
         }
 
@@ -447,7 +446,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             for (int i = 0; i < imgResourseBanner.length; i++) {
                 imageUris.add(imgResourseBanner[i]);
             }
-            banner.setBannerAnimation(Transformer.CubeIn);
+            banner.setBannerAnimation(Transformer.FlipHorizontal);
             banner.setImages(imageUris, new OnLoadImageListener() {
                 @Override
                 public void OnLoadImage(ImageView view, Object url) {

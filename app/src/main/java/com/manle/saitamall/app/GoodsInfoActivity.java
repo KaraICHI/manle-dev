@@ -1,10 +1,12 @@
 package com.manle.saitamall.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,6 +17,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,8 +40,14 @@ import com.manle.saitamall.shoppingcart.view.NumberAddSubView;
 import com.manle.saitamall.utils.CacheUtils;
 import com.manle.saitamall.utils.Constants;
 import com.bumptech.glide.Glide;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.List;
+
+import okhttp3.Call;
+
+import static com.opendanmaku.DanmakuView.TAG;
 
 /**
  * 商品信息列表页面
@@ -53,7 +63,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
     private TextView tvGoodInfoStyle;
     private WebView wbGoodInfoMore;
     private TextView tvGoodInfoCallcenter;
-    private RadioButton rbGoodInfoCollection;
+    private CheckBox rbGoodInfoCollection;
     private TextView tvGoodInfoCart;
     private Button btnGoodInfoAddcart;
     private TextView tvMoreShare;
@@ -86,7 +96,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
         wbGoodInfoMore = (WebView) findViewById(R.id.wb_good_info_more);
 
         tvGoodInfoCallcenter = (TextView) findViewById(R.id.tv_good_info_callcenter);
-        rbGoodInfoCollection = (RadioButton) findViewById(R.id.tv_good_info_collection);
+        rbGoodInfoCollection = (CheckBox) findViewById(R.id.tv_good_info_collection);
         tvGoodInfoCart = (TextView) findViewById(R.id.tv_good_info_cart);
         btnGoodInfoAddcart = (Button) findViewById(R.id.btn_good_info_addcart);
 
@@ -109,18 +119,28 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
         btn_more.setOnClickListener(this);
 
         tvGoodInfoCallcenter.setOnClickListener(this);
-        rbGoodInfoCollection.setOnClickListener(this);
         tvGoodInfoCart.setOnClickListener(this);
         btnGoodInfoAddcart.setOnClickListener(this);
         tvGoodInfoCallcenter.setOnClickListener(this);
+
+        rbGoodInfoCollection.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isLogin()){
+                if (isChecked){
+                    user.getProducts().add(product);
+                    updateUser();
+                    ToastUtils.showShortToast(GoodsInfoActivity.this,"已收藏");
+
+                }else {
+                    ToastUtils.showShortToast(GoodsInfoActivity.this,"已取消");
+                    updateUser();
+                    user.getProducts().remove(product);
+                }
+
+            }
+        });
     }
 
-    /**
-     * Handle button click events<br />
-     * <br />
-     * Auto-created on 2016-10-09 01:34:23 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
-     */
+
     @Override
     public void onClick(View v) {
         if (v == ibGoodInfoBack) {
@@ -146,19 +166,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
             ToastUtils.showShortToast(GoodsInfoActivity.this,"客服");
             Intent intent = new Intent(this, CallCenterActivity.class);
             startActivity(intent);
-        } else if (v == rbGoodInfoCollection) {
-            if (isLogin()){
-                if (rbGoodInfoCollection.isChecked()){
-                    ToastUtils.showShortToast(GoodsInfoActivity.this,"已收藏");
-                    user.getProducts().add(product);
-                    CacheUtils.putString(GoodsInfoActivity.this,"user",new Gson().toJson(user,User.class));
-                }else {
-                    ToastUtils.showShortToast(GoodsInfoActivity.this,"已取消");
-                    user.getProducts().remove(product);
-                }
-
-            }
-        } else if (v == tvGoodInfoCart) {
+        }  else if (v == tvGoodInfoCart) {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
             startActivity(intent);
 
@@ -170,6 +178,21 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
             }
 //            Toast.makeText(GoodsInfoActivity.this, "添加购物车成功", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void updateUser() {
+        OkHttpUtils.postString().url(Constants.CLIENT_USER).content(new Gson().toJson(user)).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                user = new Gson().fromJson(response,User.class);
+                CacheUtils.putString(GoodsInfoActivity.this,"user",new Gson().toJson(user,User.class));
+            }
+        });
     }
 
     @Override
@@ -195,14 +218,22 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
 
         if (product != null) {
             wbGoodInfoMore.loadUrl(goods_bean.getProduct_detail());
+            Log.e(TAG, "setWebView: "+goods_bean.getProduct_detail() );
             //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
             wbGoodInfoMore.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-                    view.loadUrl(url);
+                    if (url.startsWith("http:") || url.startsWith("https:")) {
+                        return false;
+                    }
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                    } catch (Exception e) { }
                     return true;
                 }
+
             });
             //启用支持javascript
             WebSettings settings = wbGoodInfoMore.getSettings();
@@ -240,7 +271,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
 
         // 1 利用layoutInflater获得View
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.popupwindow_add_product, null);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.popupwindow_add_product, null);
 
         // 2下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
         final PopupWindow window = new PopupWindow(view,

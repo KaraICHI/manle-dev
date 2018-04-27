@@ -48,6 +48,8 @@ public class Constants {
     public static final String ARTICAL_COMMENT = BASE_MANLE + "/api/artical-comments";
 
 
+//分类
+    public static final String PRODUCT_CATRGORY = PRODUCT + "/category";
 
 
 
@@ -63,25 +65,11 @@ public class Constants {
     // 请求Json数据基本URL
     public static final String BASE_URL_JSON = BASE + "/atguigu/json/";
 
-    // 请求图片基本URL
-    public static final String BASE_URl_IMAGE = BASE + "/atguigu/img";
-
-    public static final String UPLOAD_IMG = BASE_URl_IMAGE + "/upload_img";
 
 
-    public static final String SKIRT_URL = BASE_URL_JSON + "SKIRT_URL.json";
 
-    //主页Fragment路径
-    public static final String HOME_URL = BASE_URL_JSON + "HOME_URL.json";
-    //分类Fragment里面的标签Fragment页面数据
     public static final String Theme_URL = BASE_URL_JSON + "THEME_URL.json";
-    public static final String Category_URL = BASE_URL_JSON + "CATEGORY_URL.json";
 
-    public static final String NEW_POST_URL = BASE_URL_JSON + "NEW_POST_URL.json";
-    public static final String HOT_POST_URL = BASE_URL_JSON + "HOT_POST_URL.json";
-
-    //页面的具体数据的id
-    public static final String GOODSINFO_URL = BASE_URL_JSON + "GOODSINFO_URL.json";
 
 
     //果冻

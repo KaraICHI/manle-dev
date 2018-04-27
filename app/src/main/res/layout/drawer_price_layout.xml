@@ -40,17 +40,6 @@
             android:textColor="#4e4444"
             android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/btn_drawer_layout_confirm"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="确定"
-            android:textColor="#4e4444"
-             />
     </LinearLayout>
 
     <View
@@ -73,12 +62,6 @@
             android:textColor="#4e4444"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/iv_price_no_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
     </RelativeLayout>
 
     <View
@@ -87,26 +70,23 @@
         android:background="#eeee" />
 
     <RelativeLayout
-        android:id="@+id/rl_price_0_15"
+        android:id="@+id/rl_price_0_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:onClick="onClick"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:text="0-15"
+            android:text="0-5"
             android:textColor="#4e4444"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/iv_price_0_15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
+
     </RelativeLayout>
 
     <View
@@ -115,26 +95,22 @@
         android:background="#eeee" />
 
     <RelativeLayout
-        android:id="@+id/rl_price_15_30"
+        android:id="@+id/rl_price_5_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:onClick="onClick"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:text="15-30"
+            android:text="5-10"
             android:textColor="#4e4444"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/iv_price_15_30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
     </RelativeLayout>
 
     <View
@@ -143,28 +119,49 @@
         android:background="#eeee" />
 
     <RelativeLayout
-        android:id="@+id/rl_price_30_50"
+        android:id="@+id/rl_price_10_20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
         android:clickable="true"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:onClick="onClick"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:text="30-50"
+            android:text="10-20"
             android:textColor="#4e4444"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/iv_price_30_50"
-            android:layout_width="wrap_content"
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#eeee" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_price_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="10dp"
+        android:onClick="onClick"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected"
-            android:clickable="true" />
+            android:background="#fff"
+            android:text="20以上"
+            android:textColor="#4e4444"
+            android:textSize="15sp" />
+
+
     </RelativeLayout>
 
     <View
@@ -173,95 +170,13 @@
         android:background="#eeee" />
 
     <RelativeLayout
-        android:id="@+id/rl_price_50_70"
+        android:id="@+id/rl_denify_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:text="50-70"
-            android:textColor="#4e4444"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:id="@+id/iv_price_50_70"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="#eeee" />
-
-    <RelativeLayout
-        android:id="@+id/rl_price_70_100"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:text="70-100"
-            android:textColor="#4e4444"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:id="@+id/iv_price_70_100"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="#eeee" />
-
-    <RelativeLayout
-        android:id="@+id/rl_price_100"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:text="100以上"
-            android:textColor="#4e4444"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:id="@+id/iv_price_100"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/filter_type_selected" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="#eeee" />
-
-    <RelativeLayout
-        android:id="@+id/rl_select_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:onClick="onClick"
+        >
 
         <EditText
             android:id="@+id/et_price_start"
@@ -294,12 +209,6 @@
             android:textColor="#4e4444"
             android:textSize="15sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/filter_type_selected" />
     </RelativeLayout>
 
 </LinearLayout>

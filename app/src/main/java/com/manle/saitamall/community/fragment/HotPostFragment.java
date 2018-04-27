@@ -102,15 +102,12 @@ public class HotPostFragment extends BaseFragment {
 
     private void initPullRefresh() {
             mSwipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-            List<ArticalVO> headDatas;
-            List<ArticalVO> articalVOS = result;
+
             getDataFromNet();
-            headDatas = Stream.of(result).filter(r -> !articalVOS.contains(r)).collect(Collectors.toList());
-            adapter.AddHeaderItem(headDatas);
 
             //刷新完成
             mSwipeRefreshLayout.setRefreshing(false);
-            Toast.makeText(mContext, "更新了 " + headDatas.size() + " 条目数据", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
         }, 3000));
     }
 

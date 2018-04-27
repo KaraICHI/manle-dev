@@ -14,15 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annimon.stream.Stream;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.LoginActivity;
 import com.manle.saitamall.app.MainActivity;
 import com.manle.saitamall.app.MyAppliction;
+import com.manle.saitamall.bean.OrderItem;
 import com.manle.saitamall.shoppingcart.adapter.ShopCartAdapter;
 import com.manle.saitamall.home.bean.GoodsBean;
 import com.manle.saitamall.shoppingcart.utils.CartProvider;
 import com.manle.saitamall.utils.CacheUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 // 购物车
@@ -43,6 +46,8 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
     private TextView tv_empty_cart_tobuy;
     private LinearLayout ll_not_login;
     private TextView tv_to_login;
+
+    List<GoodsBean> datas;
     /**
      * 编辑状态
      */
@@ -98,6 +103,7 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
             finish();
         } else if (v == btnCheckOut) {
             Toast.makeText(ShoppingCartActivity.this, "结算", Toast.LENGTH_SHORT).show();
+            creatOrder();
         } else if (v == tvShopcartEdit) {
             //设置编辑的点击事件
             int tag = (int) tvShopcartEdit.getTag();
@@ -120,6 +126,13 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
         } else if (v==tv_to_login){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent,1);
+        }
+    }
+
+    private void creatOrder() {
+        BigDecimal totalPrice = new BigDecimal(0);
+        for (GoodsBean goods:datas) {
+            totalPrice.add(goods.getCover_price());
         }
     }
 
@@ -184,8 +197,7 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
 
     private void showData() {
         CartProvider cartProvider = CartProvider.getInstance();
-
-        List<GoodsBean> datas = cartProvider.getDataFromLocal();
+        datas = cartProvider.getDataFromLocal();
         if (datas != null && datas.size() > 0) {
             tvShopcartEdit.setVisibility(View.VISIBLE);
             ll_empty_shopcart.setVisibility(View.GONE);

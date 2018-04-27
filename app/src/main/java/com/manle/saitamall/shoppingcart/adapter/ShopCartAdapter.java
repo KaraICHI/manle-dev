@@ -215,7 +215,7 @@ public class ShopCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             for (int i = 0; i < datas.size(); i++) {
                 GoodsBean goodsBean = datas.get(i);
                 if (goodsBean.isChildSelected())
-                    total += Double.parseDouble(goodsBean.getCover_price()) * Double.parseDouble(goodsBean.getNumber() + "");
+                    total += goodsBean.getCover_price().doubleValue() * Double.parseDouble(goodsBean.getNumber() + "");
             }
         }
 

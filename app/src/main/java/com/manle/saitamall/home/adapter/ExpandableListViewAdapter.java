@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.manle.saitamall.R;
 import com.manle.saitamall.home.activity.GoodsListActivity;
@@ -109,25 +110,26 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         if (groupPosition != 0) {
             holder.textView.setText(child.get(groupPosition).get(childPosition));
         }
-
-        //  Toast.makeText(context, "childP" + childP + " " + groupP, Toast.LENGTH_SHORT).show();
+ /*       Toast.makeText(context, "childP" + childP + " " + groupP, Toast.LENGTH_SHORT).show();
         if (childP == childPosition && groupP == groupPosition) {
             holder.childImageView.setVisibility(View.VISIBLE);
             notifyDataSetChanged();
         } else {
             holder.childImageView.setVisibility(View.GONE);
             notifyDataSetChanged();
-        }
+        }*/
 
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        childP = childPosition;
-        groupP = groupPosition;
+/*        childP = childPosition;
+        groupP = groupPosition;*/
         return true;
     }
+
+
 
     class ViewHolder {
         TextView textView;
