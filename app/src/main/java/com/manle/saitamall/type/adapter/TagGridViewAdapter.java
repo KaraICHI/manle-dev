@@ -8,8 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.manle.saitamall.R;
+import com.manle.saitamall.bean.Theme;
 import com.manle.saitamall.type.bean.ThemeBean;
-import com.zyao89.view.zloading.ZLoadingDialog;
+
 
 import java.util.List;
 
@@ -21,14 +22,14 @@ import butterknife.ButterKnife;
  */
 public class TagGridViewAdapter extends BaseAdapter {
     private Context mContext;
-    private List<ThemeBean.ResultBean> result;
+    private List<Theme> result;
 
-    private int[] colors = {Color.parseColor("#f0a420"), Color.parseColor("#4ba5e2"), Color.parseColor("#f0839a"),
-            Color.parseColor("#4ba5e2"), Color.parseColor("#f0839a"), Color.parseColor("#f0a420"),
-            Color.parseColor("#f0839a"), Color.parseColor("#f0a420"), Color.parseColor("#4ba5e2")
+    private int[] colors = {Color.parseColor("#E83C2E"), Color.parseColor("#deE83F0F"), Color.parseColor("#cfE83C2E"),
+            Color.parseColor("#88E83C2E"), Color.parseColor("#e3E83C2E"), Color.parseColor("#f0a420"),
+            Color.parseColor("#edE83C2E"), Color.parseColor("#f0a420"), Color.parseColor("#4ba5e2")
     };
 
-    public TagGridViewAdapter(Context mContext, List<ThemeBean.ResultBean> result) {
+    public TagGridViewAdapter(Context mContext, List<Theme> result) {
         this.mContext = mContext;
         this.result = result;
 
@@ -61,8 +62,8 @@ public class TagGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ThemeBean.ResultBean resultBean = result.get(position);
-        holder.tvTag.setText(resultBean.getName());
+        Theme resultBean = result.get(position);
+        holder.tvTag.setText(resultBean.getThemeName());
         holder.tvTag.setBackgroundColor(colors[position % colors.length]);
 
         return convertView;

@@ -16,7 +16,7 @@ import com.manle.saitamall.bean.User;
 import com.manle.saitamall.bean.enumeration.OrderStatus;
 import com.manle.saitamall.home.uitls.SpaceItemDecoration;
 import com.manle.saitamall.order.activity.OrderItemActivity;
-import com.manle.saitamall.order.adapter.OrderMasterAdapter;
+import com.manle.saitamall.order.adapter.OrderMasterToPayAdapter;
 import com.manle.saitamall.utils.CacheUtils;
 import com.manle.saitamall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -107,7 +107,7 @@ public class OrderWaitToPayFragment extends BaseFragment {
 
         if (result.size()>0) Log.e(TAG, "processData: " +result.get(0).getOrderNumber());
         CacheUtils.putString(mContext,"orderMasterJson",response);
-        OrderMasterAdapter adapter = new OrderMasterAdapter(mContext, result);
+        OrderMasterToPayAdapter adapter = new OrderMasterToPayAdapter(getActivity(),mContext, result,user);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new SpaceItemDecoration(3));

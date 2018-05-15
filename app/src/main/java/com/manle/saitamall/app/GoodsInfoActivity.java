@@ -46,6 +46,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 import static com.opendanmaku.DanmakuView.TAG;
 
@@ -181,10 +183,12 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
     }
 
     private void updateUser() {
-        OkHttpUtils.postString().url(Constants.CLIENT_USER).content(new Gson().toJson(user)).build().execute(new StringCallback() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(JSON,new Gson().toJson(user));
+        OkHttpUtils.put().requestBody(requestBody).url(Constants.CLIENT_USER).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-
+                Log.e(TAG, "onError: "+e.getMessage() );
             }
 
             @Override
@@ -206,7 +210,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
         Intent intent = getIntent();
         goods_bean = (GoodsBean) intent.getSerializableExtra("goods_bean");
         product = (Product) intent.getSerializableExtra("product_detail");
-        setWebView(goods_bean);
+      //  setWebView(goods_bean);
         if (goods_bean != null) {
             //本地获取存储的数据
             setDataFormView(goods_bean);
@@ -248,9 +252,9 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
 
     public void setDataFormView(GoodsBean goodsBean) {
         String name = goodsBean.getName();
-        String cover_price = goodsBean.getCover_price();
+        String cover_price = goodsBean.getCover_price().toString();
         String figure = goodsBean.getFigure();
-        String product_id = goodsBean.getProduct_id();
+        String product_id = goodsBean.getProduct_id()+"";
 
         Glide.with(this).load(Constants.BASE_SERVER_IMAGE + figure).into(ivGoodInfoImage);
 
@@ -304,7 +308,7 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
         // 名称
         tv_goodinfo_name.setText(goods_bean.getName());
         // 显示价格
-        tv_goodinfo_price.setText(goods_bean.getCover_price());
+        tv_goodinfo_price.setText(goods_bean.getCover_price().toString());
 
         // 设置最大值和当前值
         nas_goodinfo_num.setMaxValue(8);
@@ -312,12 +316,12 @@ public class GoodsInfoActivity extends Activity implements View.OnClickListener 
 
         nas_goodinfo_num.setOnNumberChangeListener(new NumberAddSubView.OnNumberChangeListener() {
             @Override
-            public void addNumber(View view, int value) {
+            public void addNumber(View view, Integer value) {
                 goods_bean.setNumber(value);
             }
 
             @Override
-            public void subNumner(View view, int value) {
+            public void subNumner(View view, Integer value) {
                 goods_bean.setNumber(value);
             }
         });

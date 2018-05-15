@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.manle.saitamall.community.fragment.HotPostFragment;
 import com.manle.saitamall.community.fragment.NewPostFragment;
-import com.zyao89.view.zloading.ZLoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;

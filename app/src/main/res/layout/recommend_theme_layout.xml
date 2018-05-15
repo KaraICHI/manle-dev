@@ -40,24 +40,18 @@
             android:textColor="#4e4444"
             android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/btn_drawer_theme_confirm"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="确定"
-            android:textColor="#4e4444"
-            android:visibility="visible" />
+
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="#eeee" />
-
+    <ListView
+        android:id="@+id/lv_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+<!--
     <RelativeLayout
         android:id="@+id/rl_theme_all"
         android:layout_width="match_parent"
@@ -331,5 +325,5 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:background="@drawable/filter_type_selected" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 </LinearLayout>

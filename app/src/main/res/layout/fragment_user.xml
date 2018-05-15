@@ -58,6 +58,7 @@
                         android:textColor="#e44"
                         android:text="lv1"
                         />
+
                 </LinearLayout>
 
             </RelativeLayout>

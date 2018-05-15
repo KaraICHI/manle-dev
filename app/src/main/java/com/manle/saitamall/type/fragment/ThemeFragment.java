@@ -2,15 +2,21 @@ package com.manle.saitamall.type.fragment;
 
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.manle.saitamall.R;
 import com.manle.saitamall.base.BaseFragment;
+import com.manle.saitamall.bean.Theme;
+import com.manle.saitamall.community.bean.ArticalVO;
 import com.manle.saitamall.home.activity.GoodsListActivity;
 import com.manle.saitamall.type.adapter.TagGridViewAdapter;
 import com.manle.saitamall.type.bean.ThemeBean;
@@ -28,20 +34,19 @@ import okhttp3.Response;
 // 分类页面
 public class ThemeFragment extends BaseFragment {
 
-    private GridView gv_tag;
+    private ListView gv_tag;
     private TagGridViewAdapter adapter;
-    private List<ThemeBean.ResultBean> result;
+    private List<Theme> result;
 
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_tag, null);
-        gv_tag = (GridView) view.findViewById(R.id.gv_tag);
+        gv_tag = (ListView) view.findViewById(R.id.gv_tag);
         gv_tag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getContext(), GoodsListActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("type","theme");
+                intent.putExtra("themeId",result.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -57,7 +62,7 @@ public class ThemeFragment extends BaseFragment {
     public void getDataFromNet() {
         OkHttpUtils
                 .get()
-                .url(Constants.Theme_URL)
+                .url(Constants.THEME)
                 .id(100)
                 .build()
                 .execute(new ThemeFragment.MyStringCallback());
@@ -101,7 +106,8 @@ public class ThemeFragment extends BaseFragment {
 
     private void processData(String json) {
         Gson gson = new Gson();
-        ThemeBean themeBean = gson.fromJson(json, ThemeBean.class);
-        result = themeBean.getResult();
+         result = gson.fromJson(json,new TypeToken<List<Theme>>() {
+         }.getType());
+
     }
 }

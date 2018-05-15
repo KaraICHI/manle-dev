@@ -1,5 +1,6 @@
 package com.manle.saitamall.user.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.manle.saitamall.R;
 import com.manle.saitamall.base.CameraBaseActivity;
 import com.manle.saitamall.bean.User;
+import com.manle.saitamall.bean.enumeration.OrderStatus;
+import com.manle.saitamall.shoppingcart.activity.ShoppingCartActivity;
 import com.manle.saitamall.utils.CacheUtils;
 import com.manle.saitamall.utils.Constants;
 import com.manle.saitamall.utils.GlideCircleTransform;
@@ -53,10 +56,12 @@ import static android.content.ContentValues.TAG;
 public class UserModifyActivity extends CameraBaseActivity implements View.OnClickListener {
     @Bind(R.id.iv_user_avatar)
     ImageView ivUserAvatar;
-    @Bind(R.id.tv_username)
-    TextView tvUsername;
+    /* @Bind(R.id.tv_username)
+     TextView tvUsername;*/
     @Bind(R.id.et_username)
     EditText et_username;
+    @Bind(R.id.et_password)
+    EditText et_password;
     @Bind(R.id.ib_edit_done)
     ImageButton ibEditDone;
     @Bind(R.id.ib_community_back)
@@ -71,6 +76,8 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
     Button btnCancel;
     ProgressDialog progressDialog;
 
+    boolean isVerified;
+
     Context mContext = UserModifyActivity.this;
 
     User user;
@@ -80,17 +87,18 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_user);
         ButterKnife.bind(this);
-        changeImageSize();
         user = new Gson().fromJson(CacheUtils.getString(mContext, "user"), User.class);
         Glide.with(mContext).load(Constants.AVATAR_IMAGE + user.getFigure()).centerCrop().transform(new GlideCircleTransform(mContext)).into(ivUserAvatar);
         et_username.setText(user.getUserName());
+        et_password.setText(user.getPassword());
         ivUserAvatar.setOnClickListener(this);
         ibEditDone.setOnClickListener(this);
         ibBack.setOnClickListener(this);
         btnTakePhoto.setOnClickListener(this);
         btnChooseAlbum.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
-        tvUsername.setOnClickListener(this);
+        et_username.setOnClickListener(this);
+        et_password.setOnClickListener(this);
         aspectX = 90;
         aspectY = 90;
     }
@@ -112,10 +120,7 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
             case R.id.btn_cancel:
                 llAddMenu.setVisibility(View.GONE);
                 break;
-            case R.id.tv_username:
-                tvUsername.setVisibility(View.GONE);
-                et_username.setVisibility(View.VISIBLE);
-                break;
+
             case R.id.ib_edit_done:
                 saveUser();
                 Intent intent = new Intent();
@@ -126,8 +131,44 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
             case R.id.ib_community_back:
                 finish();
                 break;
+            case R.id.et_username:
+                et_username.setFocusable(true);
+                et_username.setCursorVisible(true);
+                et_username.setFocusableInTouchMode(true);
+                et_username.requestFocus();
+                break;
+            case R.id.et_password:
+                if (!isVerified){
+                    LinearLayout ll_pay = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_shopcart_pay, null);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(UserModifyActivity.this);
+                    dialog.setTitle("请输入密码")
+                            .setView(ll_pay)
+                            .setPositiveButton("确定", (dialog12, which) -> {
+                                EditText editText = (EditText) ll_pay.findViewById(R.id.et_password);
+                                if (!user.getPassword().equals(editText.getText().toString())) {
+                                    editText.setError("密码错误");
+                                } else {
+                                    isVerified = true;
+                                    dialog12.dismiss();
+                                    et_password.setFocusable(true);
+                                    et_password.setCursorVisible(true);
+                                    et_password.setFocusableInTouchMode(true);
+                                    et_password.requestFocus();
+                                }
+                            })
+                            .setNegativeButton("取消", (dialog1, which) -> {
+                                dialog1.dismiss();
+                            })
+                            .create();
+                    dialog.show();
+                }
+
+
+                break;
 
         }
+
+
     }
 
     private void saveUser() {
@@ -137,7 +178,7 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
         OkHttpUtils.put().url(Constants.CLIENT_USER).requestBody(requestBody).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                Log.e(TAG, "onError: "+e.getMessage() );
+                Log.e(TAG, "onError: " + e.getMessage());
             }
 
             @Override
@@ -215,13 +256,13 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
                         Bitmap bitmap = createCircleImage(BitmapFactory.decodeFile(photoOutputUri.getPath()));
                         ivUserAvatar.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
                         //CacheUtils.putString(mContext,"user",response);
-                        ToastUtils.showShortToast(mContext,"上传头像成功");
+                        ToastUtils.showShortToast(mContext, "上传头像成功");
                     } else {
                         Toast.makeText(mContext, "上传失败，请重试！", Toast.LENGTH_SHORT);
                     }
 
                 } catch (Exception e) {
-                    ToastUtils.showShortToast(mContext,"上传异常，请重试！");
+                    ToastUtils.showShortToast(mContext, "上传异常，请重试！");
                     Log.e(TAG, "onResponse: " + e.getMessage());
                 }
 
@@ -259,12 +300,6 @@ public class UserModifyActivity extends CameraBaseActivity implements View.OnCli
         canvas.drawBitmap(source, 0, 0, paint);
         return target;
     }
-
-    private void changeImageSize() {
-        //定义底部标签图片大小
-        Drawable drawableHome = getResources().getDrawable(R.drawable.user_modify);
-        drawableHome.setBounds(0, 0, 49, 49);//第一0是距左右边距离，第二0是距上下边距离，第三69长度,第四宽度
-        tvUsername.setCompoundDrawables(null, null, drawableHome, null);//只放上面
-
-    }
 }
+
+

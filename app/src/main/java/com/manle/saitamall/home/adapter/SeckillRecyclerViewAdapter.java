@@ -65,8 +65,8 @@ public class SeckillRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         public void setData(final int position) {
             Product listBean = list.get(position);
-            tvCoverPrice.setText("RMB " + listBean.getCoverPrice());
-            tvOriginPrice.setText("优惠" + listBean.getOriginPrice());
+            tvCoverPrice.setText(listBean.getCoverPrice().toString());
+            tvOriginPrice.setText("直降" + listBean.getOriginPrice());
             Glide.with(mContext)
                     .load(Constants.BASE_SERVER_IMAGE +listBean.getFigure())
                     .into(ivFigure);

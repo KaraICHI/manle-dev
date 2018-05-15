@@ -5,6 +5,8 @@
     android:orientation="vertical"
     tools:context=".type.fragment.ThemeFragment"
     android:paddingTop="23dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,10 +28,12 @@
     </LinearLayout>
 
 
-    <GridView
+    <ListView
         android:id="@+id/gv_tag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2" />
+        android:divider="#00000000"
+        android:dividerHeight="12dp"
+        />
 
 </LinearLayout>

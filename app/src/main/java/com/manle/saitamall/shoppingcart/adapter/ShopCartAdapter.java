@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.manle.saitamall.R;
+import com.manle.saitamall.bean.OrderItem;
 import com.manle.saitamall.home.bean.GoodsBean;
 import com.manle.saitamall.shoppingcart.view.NumberAddSubView;
 import com.manle.saitamall.shoppingcart.utils.CartProvider;
 import com.manle.saitamall.utils.Constants;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,14 +32,17 @@ public class ShopCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private TextView tvShopcartTotal;
     private CheckBox checkboxAll;
     private CheckBox cb_all;
+    private List<OrderItem> orderItems;
+    public Integer mQuanity;
 
-    public ShopCartAdapter(Context context, final List<GoodsBean> datas, TextView tvShopcartTotal, CartProvider cartProvider, CheckBox checkboxAll, CheckBox cb_all) {
+    public ShopCartAdapter(Context context, final List<GoodsBean> datas, TextView tvShopcartTotal, CartProvider cartProvider, CheckBox checkboxAll, CheckBox cb_all, List<OrderItem> orderItems) {
         this.mContext = context;
         this.datas = datas;
         this.tvShopcartTotal = tvShopcartTotal;
         this.cartProvider = cartProvider;
         this.checkboxAll = checkboxAll;
         this.cb_all = cb_all;
+        this.orderItems = orderItems;
 
         //首次加载数据
         showTotalPrice();
@@ -185,7 +190,7 @@ public class ShopCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             numberAddSubView.setOnNumberChangeListener(new NumberAddSubView.OnNumberChangeListener() {
                 @Override
-                public void addNumber(View view, int value) {
+                public void addNumber(View view, Integer value) {
 
                     goodsBean.setNumber(value);
                     cartProvider.updataData(goodsBean);
@@ -194,7 +199,7 @@ public class ShopCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
 
                 @Override
-                public void subNumner(View view, int value) {
+                public void subNumner(View view, Integer value) {
                     goodsBean.setNumber(value);
                     cartProvider.updataData(goodsBean);
 
@@ -210,15 +215,27 @@ public class ShopCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private double getTotalPrice() {
         double total = 0;
-
+        int totalQuanity = 0;
+        List<OrderItem> orderItemList = new ArrayList<>();
         if (datas != null && datas.size() > 0) {
             for (int i = 0; i < datas.size(); i++) {
                 GoodsBean goodsBean = datas.get(i);
-                if (goodsBean.isChildSelected())
-                    total += goodsBean.getCover_price().doubleValue() * Double.parseDouble(goodsBean.getNumber() + "");
-            }
-        }
 
+
+                if (goodsBean.isChildSelected()){
+                    orderItemList.add(new OrderItem(goodsBean.getName(),goodsBean.getCover_price(),goodsBean.getNumber(),goodsBean.getFigure(),goodsBean.getProduct_id()));
+                    total += goodsBean.getCover_price().doubleValue() *goodsBean.getNumber();
+                    totalQuanity += goodsBean.getNumber();
+                }
+
+
+
+            }
+
+        }
+        orderItems.clear();
+        orderItems.addAll(orderItemList);
+        mQuanity = totalQuanity;
         return total;
     }
 

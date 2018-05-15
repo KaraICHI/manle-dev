@@ -10,10 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.manle.saitamall.app.MainActivity;
-import com.manle.saitamall.bean.User;
-import com.zyao89.view.zloading.ZLoadingDialog;
-import com.zyao89.view.zloading.Z_TYPE;
+
 
 import static com.opendanmaku.DanmakuView.TAG;
 

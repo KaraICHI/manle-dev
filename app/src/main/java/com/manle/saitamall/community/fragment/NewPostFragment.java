@@ -1,6 +1,5 @@
 package com.manle.saitamall.community.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -8,22 +7,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.manle.saitamall.R;
 import com.manle.saitamall.base.BaseFragment;
-import com.manle.saitamall.bean.User;
 import com.manle.saitamall.community.adapter.NewPostListViewAdapter;
 import com.manle.saitamall.community.bean.ArticalVO;
 import com.manle.saitamall.utils.CacheUtils;
 import com.manle.saitamall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-import com.zyao89.view.zloading.ZLoadingDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;

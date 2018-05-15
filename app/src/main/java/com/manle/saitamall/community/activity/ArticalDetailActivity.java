@@ -1,6 +1,7 @@
 package com.manle.saitamall.community.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 
 import com.manle.saitamall.R;

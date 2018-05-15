@@ -9,40 +9,40 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.JsonToken;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lljjcoder.Constant;
-import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.GoodsInfoActivity;
 import com.manle.saitamall.bean.Product;
-import com.manle.saitamall.community.bean.ArticalVO;
+import com.manle.saitamall.bean.Theme;
 import com.manle.saitamall.home.adapter.ExpandableListViewAdapter;
 import com.manle.saitamall.home.adapter.GoodsListAdapter;
 import com.manle.saitamall.home.bean.GoodsBean;
-import com.manle.saitamall.home.bean.TypeListBean;
 import com.manle.saitamall.home.uitls.SpaceItemDecoration;
+import com.manle.saitamall.user.bean.Collector;
 import com.manle.saitamall.utils.Constants;
-import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +76,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     @Bind(R.id.recyclerview)
     RecyclerView recyclerview;
     @Bind(R.id.expandableListView)
-    ExpandableListView listView;
+    ExpandableListView expandableListView;
+    @Bind(R.id.lv_theme)
+    ListView listView;
 
 
     @Bind(R.id.ll_select_root)
@@ -91,12 +93,13 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     Button ib_drawer_layout_back;
     @Bind(R.id.btn_drawer_layout_cancel)
     Button btn_drawer_layout_cancel;
+    @Bind(R.id.ib_drawer_layout_confirm)
+    TextView ib_drawer_layout_confirm;
     @Bind(R.id.btn_drawer_type_confirm)
     Button btn_drawer_type_confirm;
     @Bind(R.id.btn_drawer_type_cancel)
     Button btn_drawer_type_cancel;
-    @Bind(R.id.btn_drawer_theme_confirm)
-    Button btn_drawer_theme_confirm;
+
     @Bind(R.id.btn_drawer_theme_cancel)
     Button btn_drawer_theme_cancel;
     @Bind(R.id.rl_select_price)
@@ -105,6 +108,8 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     RelativeLayout rl_select_recommend_theme;
     @Bind(R.id.rl_select_type)
     RelativeLayout rl_select_type;
+    @Bind(R.id.rl_price_nolimit)
+    RelativeLayout rl_price_nolimit;
     @Bind(R.id.rl_price_0_5)
     RelativeLayout rl_price_0_5;
     @Bind(R.id.rl_price_5_10)
@@ -121,12 +126,18 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     EditText et_price_end;
     @Bind(R.id.tv_drawer_price)
     TextView tv_drawer_price;
-    @Bind(R.id.rl_theme_note)
-    RelativeLayout rl_theme_note;
+    /* @Bind(R.id.rl_theme_note)
+     RelativeLayout rl_theme_note;*/
     @Bind(R.id.dl_left)
     DrawerLayout dl_left;
+    @Bind(R.id.tv_drawer_type)
+    TextView tv_drawer_type;
+    @Bind(R.id.tv_drawer_recommend)
+    TextView tv_drawer_recommend;
+
 
     private Long categoryId;
+    private Long themeId;
     private int click_count = 0;
 
     /*    private static final int DEFAULE_STATE = 1;
@@ -135,6 +146,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
     private int childP;
     private int groupP;
 
+    String brand = "";
+    String supply = "";
+
 
     private ArrayList<String> group;
     private ArrayList<List<String>> child;
@@ -142,6 +156,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
     private List<Product> page_data;
     private GoodsListAdapter adapter1;
+
+    private List<String> themeList;
+    private ArrayAdapter adapter2;
 
     private void findViews() {
 
@@ -152,6 +169,7 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         tvGoodsListSort.setOnClickListener(this);
         tvGoodsListSelect.setOnClickListener(this);
         ib_drawer_layout_back.setOnClickListener(this);
+        ib_drawer_layout_confirm.setOnClickListener(this);
 
         rl_select_price.setOnClickListener(this);
         rl_select_recommend_theme.setOnClickListener(this);
@@ -160,10 +178,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         btn_drawer_layout_cancel.setOnClickListener(this);
         btn_drawer_type_confirm.setOnClickListener(this);
         btn_drawer_type_cancel.setOnClickListener(this);
-        btn_drawer_theme_confirm.setOnClickListener(this);
         btn_drawer_theme_cancel.setOnClickListener(this);
 
-        rl_theme_note.setOnClickListener(this);
+       /* rl_theme_note.setOnClickListener(this);*/
         tvGoodsListSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -248,9 +265,10 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
 
             showSelectorLayout();
-        } /*else if (v == btn_drawer_layout_confirm) {
-            Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
-        }*/ else if (v == rl_price_0_5) {
+        } else if (v == rl_price_nolimit) {
+            tv_drawer_price.setText("不限");
+            showSelectorLayout();
+        } else if (v == rl_price_0_5) {
             tv_drawer_price.setText("0-5");
             showSelectorLayout();
         } else if (v == rl_price_5_10) {
@@ -260,27 +278,53 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
             tv_drawer_price.setText("10-20");
             showSelectorLayout();
         } else if (v == rl_price_20) {
-            tv_drawer_price.setText("20+");
+            tv_drawer_price.setText("20-999");
             showSelectorLayout();
-        }else if (v == rl_denify_price) {
-            tv_drawer_price.setText(et_price_start.getText().toString()+"-"+et_price_end.getText().toString());
+        } else if (v == rl_denify_price) {
+            tv_drawer_price.setText(et_price_start.getText().toString() + "-" + et_price_end.getText().toString());
             showSelectorLayout();
-        }  else if (v == rl_theme_note) {
-            Toast.makeText(GoodsListActivity.this, "123123123", Toast.LENGTH_SHORT).show();
-        } else if (v == btn_drawer_type_confirm) {
+        } else if (v == ib_drawer_layout_confirm) {
+            filterByPriceAndTheme();
             Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
         } else if (v == btn_drawer_type_cancel) {
             Toast.makeText(GoodsListActivity.this, "取消", Toast.LENGTH_SHORT).show();
-
             showSelectorLayout();
-        } else if (v == btn_drawer_theme_confirm) {
-            Toast.makeText(GoodsListActivity.this, "确认", Toast.LENGTH_SHORT).show();
         } else if (v == btn_drawer_theme_cancel) {
 
             showSelectorLayout();
         }
 
 
+    }
+
+    private void filterByPriceAndTheme() {
+        List<Product> page_data1 = new ArrayList<>();
+        String[] prices = tv_drawer_price.getText().toString().split("-");
+        String theme = tv_drawer_recommend.getText().toString();
+        if (prices.length==2){
+            BigDecimal minPrice = new BigDecimal(prices[0]);
+            BigDecimal maxPrice = new BigDecimal(prices[1]);
+            if (theme.equals("全部")){
+                page_data1 = Stream.of(page_data).filter(d -> d.getCoverPrice().compareTo(maxPrice) < 0 && minPrice.compareTo(d.getCoverPrice()) < 0).collect(Collectors.toList());
+
+            }else {
+
+                page_data1 = Stream.of(page_data).filter(d -> d.getCoverPrice().compareTo(maxPrice) < 0 && minPrice.compareTo(d.getCoverPrice()) < 0 && d.getThemeThemeName().equals(theme)).collect(Collectors.toList());
+
+            }
+        } else {
+            if (theme.equals("全部")){
+                page_data1 = Stream.of(page_data).filter(d ->  d.getThemeThemeName().equals(theme)).collect(Collectors.toList());
+
+            }else {
+                page_data1 = page_data;
+            }
+        }
+
+
+
+        adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data1);
+        recyclerview.setAdapter(adapter1);
     }
 
 
@@ -294,8 +338,11 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
         Intent intent = getIntent();
         categoryId = intent.getLongExtra("categoryId", -1l);
+        themeId = intent.getLongExtra("themeId", -1);
         if (categoryId != -1) {
-            getDataFromNet();
+            getDataFromNetCategory();
+        } else if (themeId != -1) {
+            getDataFromNetTheme();
         }
         String more_products = intent.getStringExtra("more_products");
         if (more_products != null) {
@@ -307,22 +354,23 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         initListener();
     }
 
+
     private void initListener() {
-        listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             Toast.makeText(GoodsListActivity.this, "childPosition" + childPosition, Toast.LENGTH_SHORT).show();
             childP = childPosition;
             adapter.notifyDataSetChanged();
             return false;
         });
 
-        listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+        expandableListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             Toast.makeText(GoodsListActivity.this, "groupPosition" + groupPosition, Toast.LENGTH_SHORT).show();
             groupP = groupPosition;
             adapter.notifyDataSetChanged();
             return false;
         });
 
-        listView.setOnItemClickListener((parent, view, position, id) -> Toast.makeText(GoodsListActivity.this, "position---" + position, Toast.LENGTH_SHORT).show());
+        expandableListView.setOnItemClickListener((parent, view, position, id) -> Toast.makeText(GoodsListActivity.this, "position---" + position, Toast.LENGTH_SHORT).show());
     }
 
 
@@ -347,6 +395,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         ll_select_root.setVisibility(View.GONE);
         ll_price_root.setVisibility(View.GONE);
         ll_type_root.setVisibility(View.GONE);
+        getThemeFromNet();
+
+
     }
 
     //类别页面
@@ -358,32 +409,36 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         //初始化ExpandableListView
         initExpandableListView();
         adapter = new ExpandableListViewAdapter(this, group, child);
-        listView.setAdapter(adapter);
+        expandableListView.setAdapter(adapter);
     }
 
     private void initExpandableListView() {
         group = new ArrayList<>();
         child = new ArrayList<>();
         //去掉默认箭头
-        listView.setGroupIndicator(null);
+        expandableListView.setGroupIndicator(null);
         addInfo("全部", new String[]{});
         addInfo("品牌", new String[]{"巧妈妈", "乐事", "娃哈哈", "卡文哈夫"});
         addInfo("产地", new String[]{"日本", "韩国", "德国", "中国", "意大利"});
 
 
-        listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+        expandableListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             if (child.get(groupPosition).isEmpty()) {// isEmpty没有
                 return true;
             } else {
                 return false;
             }
         });
-        listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+
             if (groupPosition == 1) {
+                brand = child.get(1).get(childPosition);
+
                 page_data = Stream.of(page_data).filter(s -> s.getBrand().equals(child.get(1).get(childPosition))).collect(Collectors.toList());
                 adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data);
                 recyclerview.setAdapter(adapter1);
             } else if (groupPosition == 2) {
+                supply = child.get(2).get(childPosition);
                 page_data = Stream.of(page_data).filter(s -> s.getSupply().equals(child.get(2).get(childPosition))).collect(Collectors.toList());
                 adapter1 = new GoodsListAdapter(GoodsListActivity.this, page_data);
                 recyclerview.setAdapter(adapter1);
@@ -408,8 +463,17 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
         child.add(list);
     }
 
+    private void getDataFromNetTheme() {
+        OkHttpUtils
+                .get()
+                .url(Constants.PRODUCT_THEME)
+                .addParams("themeId", themeId + "")
+                .id(100)
+                .build()
+                .execute(new MyStringCallback());
+    }
 
-    public void getDataFromNet() {
+    public void getDataFromNetCategory() {
         OkHttpUtils
                 .get()
                 .url(Constants.PRODUCT_CATRGORY)
@@ -417,6 +481,32 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
                 .id(100)
                 .build()
                 .execute(new MyStringCallback());
+    }
+
+    public void getThemeFromNet() {
+        OkHttpUtils.get().url(Constants.THEME).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e(TAG, "onError: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                List<Theme> themes = new Gson().fromJson(response, new TypeToken<List<Theme>>() {
+                }.getType());
+                themeList = Stream.of(themes).map(Theme::getThemeName).collect(Collectors.toList());
+                if (themeList != null) {
+                    adapter2 = new ArrayAdapter(GoodsListActivity.this, R.layout.item_drawer_theme, themeList);
+                    listView.setAdapter(adapter2);
+                    listView.setOnItemClickListener((parent, view, position, iid)
+                            -> {
+                        tv_drawer_recommend.setText(themeList.get((int) iid));
+                        showSelectorLayout();
+                    });
+
+                }
+            }
+        });
     }
 
     public class MyStringCallback extends StringCallback {
@@ -468,9 +558,9 @@ public class GoodsListActivity extends Activity implements View.OnClickListener 
 
             adapter1.setOnItemClickListener(data -> {
                 String name = data.getProductName();
-                String cover_price = data.getCoverPrice().toString();
+                BigDecimal cover_price = data.getCoverPrice();
                 String figure = data.getFigure();
-                String product_id = data.getId() + "";
+                long product_id = data.getId();
                 String product_detail = data.getDescription();
                 GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
                 Intent intent = new Intent(GoodsListActivity.this, GoodsInfoActivity.class);

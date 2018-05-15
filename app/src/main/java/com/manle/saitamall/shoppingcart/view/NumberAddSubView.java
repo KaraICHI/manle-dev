@@ -21,11 +21,11 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
     private ImageView btn_sub;
     private ImageView btn_add;
     private TextView tv_count;
-    private int value = 1;
-    private int minValue = 1;
-    private int maxValue = 10;
+    private Integer value = 1;
+    private Integer minValue = 1;
+    private Integer maxValue = 10;
 
-    public int getValue() {
+    public long getValue() {
 
         String countStr = tv_count.getText().toString().trim();//文本内容
         if (countStr != null) {
@@ -35,12 +35,12 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
         tv_count.setText(String.valueOf(value));
     }
 
-    public int getMinValue() {
+    public long getMinValue() {
         return minValue;
     }
 
@@ -48,7 +48,7 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
         this.minValue = minValue;
     }
 
-    public int getMaxValue() {
+    public long getMaxValue() {
         return maxValue;
     }
 
@@ -144,9 +144,9 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
 
     public interface OnNumberChangeListener {
         //当按钮被点击的时候回调
-        void addNumber(View view, int value);
+        void addNumber(View view, Integer value);
 
-        void subNumner(View view, int value);
+        void subNumner(View view, Integer value);
     }
 
     private OnNumberChangeListener onNumberChangeListener;

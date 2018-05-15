@@ -4,27 +4,36 @@ package com.manle.saitamall.bean;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * A DTO for the OrderItem entity.
  */
-public class OrderItem  extends JSONObject implements Serializable {
+public class OrderItem  implements Serializable {
 
     private static final long serialVersionUID = -120092599051089506L;
     private Long id;
 
     private String productName;
 
-    private Long productPrice;
+    private BigDecimal productPrice;
 
-    private Long productQuantity;
+    private Integer productQuantity;
 
     private String productIcon;
 
     private Long orderMasterId;
 
     private Long productId;
+
+    public OrderItem(String productName, BigDecimal productPrice, Integer productQuantity, String productIcon, Long productId) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productQuantity = productQuantity;
+        this.productIcon = productIcon;
+        this.productId = productId;
+    }
 
     public Long getId() {
         return id;
@@ -42,19 +51,19 @@ public class OrderItem  extends JSONObject implements Serializable {
         this.productName = productName;
     }
 
-    public Long getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Long productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 
-    public Long getProductQuantity() {
+    public Integer getProductQuantity() {
         return productQuantity;
     }
 
-    public void setProductQuantity(Long productQuantity) {
+    public void setProductQuantity(Integer productQuantity) {
         this.productQuantity = productQuantity;
     }
 

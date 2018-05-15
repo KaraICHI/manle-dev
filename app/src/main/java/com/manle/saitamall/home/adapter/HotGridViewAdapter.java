@@ -61,7 +61,7 @@ public class HotGridViewAdapter extends BaseAdapter {
                 .load(Constants.BASE_SERVER_IMAGE +hotInfoBean.getFigure())
                 .into(holder.ivHot);
         holder.tvName.setText(hotInfoBean.getProductName());
-        holder.tvPrice.setText("RMB " + hotInfoBean.getCoverPrice());
+        holder.tvPrice.setText(hotInfoBean.getCoverPrice().toString());
         return convertView;
     }
 

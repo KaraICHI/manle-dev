@@ -1,7 +1,9 @@
 package com.manle.saitamall.shoppingcart.activity;
 
 import android.app.Activity;
-import android.app.Application;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,24 +11,41 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.google.gson.Gson;
+import com.lljjcoder.style.citylist.Toast.ToastUtils;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.LoginActivity;
 import com.manle.saitamall.app.MainActivity;
-import com.manle.saitamall.app.MyAppliction;
+import com.manle.saitamall.bean.Address;
 import com.manle.saitamall.bean.OrderItem;
+import com.manle.saitamall.bean.OrderMaster;
+import com.manle.saitamall.bean.User;
+import com.manle.saitamall.bean.enumeration.OrderStatus;
 import com.manle.saitamall.shoppingcart.adapter.ShopCartAdapter;
 import com.manle.saitamall.home.bean.GoodsBean;
 import com.manle.saitamall.shoppingcart.utils.CartProvider;
+import com.manle.saitamall.user.bean.Collector;
 import com.manle.saitamall.utils.CacheUtils;
+import com.manle.saitamall.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 // 购物车
 public class ShoppingCartActivity extends Activity implements View.OnClickListener {
@@ -46,8 +65,11 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
     private TextView tv_empty_cart_tobuy;
     private LinearLayout ll_not_login;
     private TextView tv_to_login;
-
+    User user;
     List<GoodsBean> datas;
+    private List<OrderItem> orderItems = new ArrayList<>();
+    OrderMaster orderMaster;
+    CartProvider cartProvider = CartProvider.getInstance();
     /**
      * 编辑状态
      */
@@ -130,10 +152,87 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
     }
 
     private void creatOrder() {
-        BigDecimal totalPrice = new BigDecimal(0);
-        for (GoodsBean goods:datas) {
-            totalPrice.add(goods.getCover_price());
+        Address address = new Gson().fromJson(CacheUtils.getString(ShoppingCartActivity.this, "address"), Address.class);
+        if (address!=null){
+            orderMaster = new OrderMaster();
+            orderMaster.setAddressId(address.getId());
+            orderMaster.setClientUserId(address.getClientUserId());
+            orderMaster.setOrderStatus(OrderStatus.WAIT_TO_PAY);
+            orderMaster.setOrderNumber(String.valueOf(System.currentTimeMillis()));
+            orderMaster.setTotalPrices(new BigDecimal(tvShopcartTotal.getText().toString()));
+            orderMaster.setTotalQuanity(adapter.mQuanity);
+            saveOrderMaster(false);
+        }else {
+            ToastUtils.showShortToast(ShoppingCartActivity.this,"请添加地址信息");
         }
+
+
+    }
+
+    private void saveOrderMaster(boolean isUpdate){
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(JSON,new Gson().toJson(orderMaster));
+        OkHttpUtils.put().requestBody(requestBody).url(Constants.ORDER_MASTER).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                ToastUtils.showShortToast(ShoppingCartActivity.this,"联网失败");
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                if (response!=null){
+                    orderMaster = new Gson().fromJson(response,OrderMaster.class);
+                    if (orderMaster!=null&&!isUpdate){
+                        creatOrderItem();
+                    }
+                }
+            }
+        });
+    }
+
+    private void creatOrderItem() {
+        for(OrderItem orderItem:orderItems){
+            orderItem.setOrderMasterId(orderMaster.getId());
+        }
+        OkHttpUtils.postString().url(Constants.ORDER_ITEM+"/list")
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(new Gson().toJson(orderItems)).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                ToastUtils.showShortToast(ShoppingCartActivity.this,"联网失败");
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                LinearLayout ll_pay = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_shopcart_pay,null);
+                AlertDialog dialog = new AlertDialog.Builder(ShoppingCartActivity.this)
+                        .setTitle("支付")
+                        .setView(ll_pay)
+                        .setPositiveButton("确定", (dialog12, which) -> {
+                            EditText editText = (EditText) ll_pay.findViewById(R.id.et_password);
+                            if (!user.getPassword().equals(editText.getText().toString())){
+                                editText.setError("密码错误");
+                            }else {
+                                ToastUtils.showShortToast(ShoppingCartActivity.this,"支付成功");
+                                orderMaster.setOrderStatus(OrderStatus.WAIT_TO_SEND);
+                                saveOrderMaster(true);
+
+                            }
+                            datas.clear();
+                            cartProvider.deleteAll();
+                            checkData();
+                        })
+                        .setNegativeButton("取消", (dialog1, which) -> {
+                            dialog1.dismiss();
+                            datas.clear();
+                            cartProvider.deleteAll();
+                            checkData();
+                        })
+                        .create();
+                dialog.show();
+
+            }
+        });
     }
 
     private void hideDelete() {
@@ -166,8 +265,9 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_cart);
         findViews();
-        String user= CacheUtils.getString(ShoppingCartActivity.this,"user");
-        if (user==null||user.equals("")){
+        String userJson= CacheUtils.getString(ShoppingCartActivity.this,"user");
+        user = new Gson().fromJson(userJson,User.class);
+        if (user==null){
             tvShopcartEdit.setVisibility(View.GONE);
             ll_not_login.setVisibility(View.VISIBLE);
             ll_check_all.setVisibility(View.GONE);
@@ -196,12 +296,12 @@ public class ShoppingCartActivity extends Activity implements View.OnClickListen
     }
 
     private void showData() {
-        CartProvider cartProvider = CartProvider.getInstance();
+
         datas = cartProvider.getDataFromLocal();
         if (datas != null && datas.size() > 0) {
             tvShopcartEdit.setVisibility(View.VISIBLE);
             ll_empty_shopcart.setVisibility(View.GONE);
-            adapter = new ShopCartAdapter(this, datas, tvShopcartTotal, cartProvider, checkboxAll, cb_all);
+            adapter = new ShopCartAdapter(this, datas, tvShopcartTotal, cartProvider, checkboxAll, cb_all, orderItems);
             recyclerview.setLayoutManager(new LinearLayoutManager(this));
             recyclerview.setAdapter(adapter);
         } else {

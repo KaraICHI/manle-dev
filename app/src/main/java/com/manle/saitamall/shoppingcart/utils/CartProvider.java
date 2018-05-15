@@ -47,7 +47,7 @@ public class CartProvider {
         if (carts != null && carts.size() > 0) {
             for (int i = 0; i < carts.size(); i++) {
                 GoodsBean goodsBean = carts.get(i);
-                datas.put(Integer.parseInt(goodsBean.getProduct_id()), goodsBean);
+                datas.put((int)goodsBean.getProduct_id(), goodsBean);
             }
         }
     }
@@ -88,7 +88,7 @@ public class CartProvider {
     public void addData(GoodsBean cart) {
 
         //添加数据
-        GoodsBean tempCart = datas.get(Integer.parseInt(cart.getProduct_id()));
+        GoodsBean tempCart = datas.get((int)cart.getProduct_id());
         if (tempCart != null) {
             tempCart.setNumber(tempCart.getNumber() + cart.getNumber());
         } else {
@@ -96,9 +96,13 @@ public class CartProvider {
             tempCart.setNumber(1);
         }
 
-        datas.put(Integer.parseInt(tempCart.getProduct_id()), tempCart);
+        datas.put((int)tempCart.getProduct_id(), tempCart);
 
         //保存数据
+        commit();
+    }
+    public void deleteAll(){
+        datas.clear();
         commit();
     }
 
@@ -117,7 +121,7 @@ public class CartProvider {
     public void deleteData(GoodsBean cart) {
 
         //删除数据
-        datas.delete(Integer.parseInt(cart.getProduct_id()));
+        datas.delete((int)cart.getProduct_id());
 
         //保存数据
         commit();
@@ -125,7 +129,7 @@ public class CartProvider {
 
     public void updataData(GoodsBean cart) {
         //修改数据
-        datas.put(Integer.parseInt(cart.getProduct_id()), cart);
+        datas.put((int)cart.getProduct_id(), cart);
 
         //保存数据
         commit();
@@ -138,7 +142,7 @@ public class CartProvider {
      */
     public GoodsBean findData(GoodsBean goods_bean) {
 
-        GoodsBean goodsBean = datas.get(Integer.parseInt(goods_bean.getProduct_id()));
+        GoodsBean goodsBean = datas.get((int)goods_bean.getProduct_id());
         if(goodsBean != null){
             return goods_bean;
         }

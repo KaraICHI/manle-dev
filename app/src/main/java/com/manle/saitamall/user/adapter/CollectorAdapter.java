@@ -121,7 +121,7 @@ public class CollectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void setData(final GoodsBean data) {
             Glide.with(mContext).load(Constants.BASE_SERVER_IMAGE + data.getFigure()).into(iv_hot);
             tv_name.setText(data.getName());
-            tv_price.setText(data.getCover_price());
+            tv_price.setText(data.getCover_price().toString());
             if (data.isEditing()){
                 cb_collect.setVisibility(View.VISIBLE);
             }else {

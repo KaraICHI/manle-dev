@@ -4,9 +4,11 @@ public class Constants {
     //家里wifi
     //  public static final String BASE = "http://192.168.1.106";
     //公司wifi
-    public static final String BASE = "http://192.168.137.1";
+ //   public static final String BASE = "http://192.168.137.1";
+ //   public static final String BASE = "http://192.168.137.159";
 
-    public static final String BASE_MANLE = "http://192.168.137.1:8080";
+   public static final String BASE_MANLE = "http://192.168.137.1:8080";
+//    public static final String BASE_MANLE = "http://192.168.137.159:8080";
 
     public static final String CLIENT_USER = BASE_MANLE + "/api/client-users";
 
@@ -26,9 +28,9 @@ public class Constants {
     public static final String ORDER_ITEM_MASTER = ORDER_ITEM + "/master";
 
     //社区
-    public static final String ARTICAL = BASE_MANLE+"/api/articals";
-    public static final String ARTICAL_FIGURE = ARTICAL+"/upload";
-    public static final String ARTICAL_IMAGE = BASE_SERVER_IMAGE+"article/";
+    public static final String ARTICAL = BASE_MANLE + "/api/articals";
+    public static final String ARTICAL_FIGURE = ARTICAL + "/upload";
+    public static final String ARTICAL_IMAGE = BASE_SERVER_IMAGE + "article/";
 
     //地址
     public static final String ADDRESS = BASE_MANLE + "/api/addresses";
@@ -41,15 +43,21 @@ public class Constants {
     //收藏
 
     //点赞
-    public static final String LIKE_ADD = ARTICAL+"/add-like";
-    public static final String LIKE_REMOVE = ARTICAL+"/remove-like";
+    public static final String LIKE_ADD = ARTICAL + "/add-like";
+    public static final String LIKE_REMOVE = ARTICAL + "/remove-like";
 
     //文章评论
     public static final String ARTICAL_COMMENT = BASE_MANLE + "/api/artical-comments";
 
 
-//分类
+    //分类
     public static final String PRODUCT_CATRGORY = PRODUCT + "/category";
+
+
+
+    //Theme
+    public static final String PRODUCT_THEME = PRODUCT + "/theme";
+    public static final String THEME = BASE_MANLE + "/api/themes";
 
 
 
@@ -61,20 +69,17 @@ public class Constants {
    public static final String WAIT_TO_COMMENT = "WAIT_TO_COMMENT";
 */
 
-
+/*
     // 请求Json数据基本URL
-    public static final String BASE_URL_JSON = BASE + "/atguigu/json/";
-
-
+    public static final String BASE_URL_JSON = BASE + "/atguigu/json/";*//*
 
 
     public static final String Theme_URL = BASE_URL_JSON + "THEME_URL.json";
 
 
-
     //果冻
     public static final String GUODONG_STORE = BASE_URL_JSON + "GUODONG_STORE.json";
-    public static final String COLLECT_URL = BASE_URL_JSON + "COLLECT_URL.json";
+    public static final String COLLECT_URL = BASE_URL_JSON + "COLLECT_URL.json";*/
 
     public static Boolean isBackHome = false;
 

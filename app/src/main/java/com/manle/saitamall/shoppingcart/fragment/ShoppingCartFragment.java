@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -25,22 +24,20 @@ import com.alipay.sdk.app.PayTask;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.LoginActivity;
 import com.manle.saitamall.app.MainActivity;
-import com.manle.saitamall.app.MyAppliction;
 import com.manle.saitamall.base.BaseFragment;
+import com.manle.saitamall.bean.OrderItem;
 import com.manle.saitamall.home.bean.GoodsBean;
-import com.manle.saitamall.home.fragment.HomeFragment;
-import com.manle.saitamall.shoppingcart.activity.ShoppingCartActivity;
 import com.manle.saitamall.shoppingcart.adapter.ShopCartAdapter;
 import com.manle.saitamall.shoppingcart.pay.PayResult;
 import com.manle.saitamall.shoppingcart.pay.SignUtils;
 import com.manle.saitamall.shoppingcart.utils.CartProvider;
 import com.manle.saitamall.shoppingcart.utils.PayKeys;
 import com.manle.saitamall.utils.CacheUtils;
-import com.manle.saitamall.utils.Constants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -75,6 +72,8 @@ public class ShoppingCartFragment extends BaseFragment implements View.OnClickLi
     private static final int ACTION_COMPLETE = 1;
 
     private ShopCartAdapter adapter;
+    Integer mQuanity;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private void findViews(View view) {
         tvShopcartEdit = (TextView) view.findViewById(R.id.tv_shopcart_edit);
@@ -211,7 +210,7 @@ public class ShoppingCartFragment extends BaseFragment implements View.OnClickLi
         if (datas != null && datas.size() > 0) {
             tvShopcartEdit.setVisibility(View.VISIBLE);
 
-            adapter = new ShopCartAdapter(mContext, datas, tvShopcartTotal, cartProvider, checkboxAll, cbAll);
+            adapter = new ShopCartAdapter(mContext, datas, tvShopcartTotal, cartProvider, checkboxAll, cbAll, orderItems);
             recyclerview.setLayoutManager(new LinearLayoutManager(mContext));
             recyclerview.setAdapter(adapter);
 

@@ -66,15 +66,17 @@ public class AddressMangerActivity extends Activity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_manager);
-        mPicker.init(this);
         ButterKnife.bind(this);
+
         user = new Gson().fromJson(CacheUtils.getString(AddressMangerActivity.this, "user"), User.class);
         tvAddressEdit.setOnClickListener(this);
         btnChoose.setOnClickListener(this);
         ibAddressBack.setOnClickListener(this);
         tvAddressEdit.setText("保存");
         address = new Gson().fromJson(CacheUtils.getString(AddressMangerActivity.this, "address"), Address.class);
-        if (address != null || getAddress() != null) {
+
+        mPicker.init(this);
+        if (address!=null&&address.getClientUserId()==user.getId() || getAddress() != null) {
             initData();
         }
 
@@ -103,7 +105,7 @@ public class AddressMangerActivity extends Activity implements View.OnClickListe
                 break;
             case R.id.tv_address_edit:
                 if (tvAddressEdit.getText().toString().equals("保存")) {
-                    Address address1 = address;
+                    Address address1 = new Address();
                     if (address == null) {
                         address = new Address();
                     }
@@ -114,12 +116,12 @@ public class AddressMangerActivity extends Activity implements View.OnClickListe
                     if (consignee == null || addressDetail == null || addressCity == null || phone == null) {
                         ToastUtils.showShortToast(AddressMangerActivity.this, "信息不完整");
                     } else {
-                        address.setConsignee(consignee);
-                        address.setAddress(addressCity + "-" + addressDetail);
-                        address.setPhone(phone);
-                        address.setClientUserId(user.getId());
+                        address1.setConsignee(consignee);
+                        address1.setAddress(addressCity + "-" + addressDetail);
+                        address1.setPhone(phone);
+                        address1.setClientUserId(user.getId());
                         if (!address1.equals(address)) {
-                            saveAddress();
+                            saveAddress(address1);
                         }
 
                     }
@@ -138,9 +140,9 @@ public class AddressMangerActivity extends Activity implements View.OnClickListe
         }
     }
 
-    private void saveAddress() {
+    private void saveAddress(Address address1) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String addressJson = new Gson().toJson(address);
+        String addressJson = new Gson().toJson(address1);
         OkHttpUtils.postString().mediaType(JSON).content(addressJson).url(Constants.ADDRESS).build().execute(new StringCallback() {
             @Override
             public void onBefore(Request request, int id) {
@@ -175,6 +177,7 @@ public class AddressMangerActivity extends Activity implements View.OnClickListe
     private Address processData(String response) {
         CacheUtils.putString(AddressMangerActivity.this, "address", response);
         address = new Gson().fromJson(response, Address.class);
+        ToastUtils.showShortToast(AddressMangerActivity.this,"保存成功");
         return address;
     }
 

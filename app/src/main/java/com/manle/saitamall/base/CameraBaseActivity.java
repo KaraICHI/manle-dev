@@ -54,7 +54,7 @@ public class CameraBaseActivity extends Activity {
         }
 
         if (Build.VERSION.SDK_INT >= 24) {
-            photoUri = FileProvider.getUriForFile(this, "com.zhi_dian.provider", file);
+            photoUri = FileProvider.getUriForFile(this, "com.manle.saitamall.FileProvider", file);
         } else {
             photoUri = Uri.fromFile(file); // Android 7.0 以前使用原来的方法来获取文件的 Uri
         }

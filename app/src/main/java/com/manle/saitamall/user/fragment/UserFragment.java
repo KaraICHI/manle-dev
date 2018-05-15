@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +62,6 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
     TextView tvToAllOrder;
     @Bind(R.id.tv_to_address)
     TextView tvToAddress;
-
 
     User user;
 
@@ -147,6 +147,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener {
             case R.id.tv_login_out:
                 Log.d(TAG, "onClick: =============loginout");
                 CacheUtils.putString(mContext, "user", null);
+                CacheUtils.putString(mContext,"address",null);
                 llNotLogin.setVisibility(View.VISIBLE);
                 break;
             case R.id.tv_to_login:

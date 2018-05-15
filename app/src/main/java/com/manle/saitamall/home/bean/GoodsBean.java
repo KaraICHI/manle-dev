@@ -12,9 +12,9 @@ public class GoodsBean implements Serializable {
     private String name;
     private BigDecimal cover_price;
     private String figure;
-    private Long product_id;
+    private long product_id;
     private String product_detail;
-    private int number = 1;
+    private Integer number = 1;
 
     /**
      * 是否处于编辑状态
@@ -60,11 +60,11 @@ public class GoodsBean implements Serializable {
         this.figure = figure;
     }
 
-    public Long getProduct_id() {
+    public long getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(Long product_id) {
+    public void setProduct_id(long product_id) {
         this.product_id = product_id;
     }
 
@@ -84,11 +84,11 @@ public class GoodsBean implements Serializable {
         this.isChildSelected = isChildSelected;
     }
 
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 

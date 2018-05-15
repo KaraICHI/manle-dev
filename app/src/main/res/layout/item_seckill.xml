@@ -18,26 +18,41 @@
             android:layout_height="100dp"
             android:background="@drawable/new_img_loading_2" />
 
-        <TextView
-            android:id="@+id/tv_cover_price"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
-            android:text="￥102.00"
-            android:textColor="#ff4c4c"
-            android:textSize="15sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="RMB"
+                android:textColor="#ff4242"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_cover_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="88.00"
+                android:textColor="#ff4242" />
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="10dp"
+            >
 
             <TextView
                 android:id="@+id/tv_origin_price"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:text="- 159.00"
                 android:textColor="#9a9a9a" />
 

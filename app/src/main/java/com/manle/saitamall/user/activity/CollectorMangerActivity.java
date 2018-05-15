@@ -14,15 +14,14 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.manle.saitamall.R;
 import com.manle.saitamall.app.GoodsInfoActivity;
 import com.manle.saitamall.bean.Product;
 import com.manle.saitamall.bean.User;
-import com.manle.saitamall.community.bean.ArticalVO;
 import com.manle.saitamall.home.bean.GoodsBean;
 import com.manle.saitamall.home.uitls.SpaceItemDecoration;
 import com.manle.saitamall.user.adapter.CollectorAdapter;
@@ -32,11 +31,16 @@ import com.manle.saitamall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.Request;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
+import static com.opendanmaku.DanmakuView.TAG;
 
 /**
  * Created by Administrator on 2018/4/5.
@@ -51,6 +55,7 @@ public class CollectorMangerActivity extends Activity implements View.OnClickLis
     private LinearLayout ll_delete;
     private CheckBox cb_all;
     private Button btn_delete;
+    CollectorAdapter adapter;
     Context mContext = CollectorMangerActivity.this;
     User user;
 
@@ -80,20 +85,23 @@ public class CollectorMangerActivity extends Activity implements View.OnClickLis
         result = user.getProducts();
         datas = new ArrayList<>();
         for (Product temp:result) {
-            GoodsBean goodsBean = new GoodsBean(temp.getProductName(),temp.getCoverPrice().toString(),temp.getFigure(),temp.getId()+"", temp.getDescription());
-            datas.add(goodsBean);
+            if (temp!=null){
+                GoodsBean goodsBean = new GoodsBean(temp.getProductName(),temp.getCoverPrice(),temp.getFigure(),temp.getId(), temp.getDescription());
+                datas.add(goodsBean);
+            }
+
 
         }
-        CollectorAdapter adapter = new CollectorAdapter(CollectorMangerActivity.this, datas,cb_all,tvCollectEdit);
+        adapter = new CollectorAdapter(CollectorMangerActivity.this, datas,cb_all,tvCollectEdit);
         collects.setLayoutManager(new GridLayoutManager(CollectorMangerActivity.this,2));
         collects.setAdapter(adapter);
         collects.addItemDecoration(new SpaceItemDecoration(10));
 
         adapter.setOnItemClickListener(data -> {
             String name = data.getName();
-            String cover_price = data.getCover_price();
+            BigDecimal cover_price = data.getCover_price();
             String figure = data.getFigure();
-            String product_id = data.getProduct_id();
+            long product_id = data.getProduct_id();
             String product_detail = data.getProduct_detail();
             GoodsBean goodsBean = new GoodsBean(name, cover_price, figure, product_id, product_detail);
             Intent intent = new Intent(CollectorMangerActivity.this, GoodsInfoActivity.class);
@@ -126,8 +134,38 @@ public class CollectorMangerActivity extends Activity implements View.OnClickLis
                     tvCollectEdit.setText("编辑");
                     ll_delete.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.btn_delete:
+                datas = Stream.of(datas).filter(d->!d.isChildSelected()).collect(Collectors.toList());
+                if (datas.size()==0){
+                    user.setProducts(null);
+                }else {
+                    List<Long> productId = Stream.of(datas).map(d->d.getProduct_id()).collect(Collectors.toList());
+                    List<Product> products = Stream.of(result).filter(r->productId.contains(r.getId())).collect(Collectors.toList());
+                    user.setProducts(products);
+                }
+                updateUser();
+                adapter = new CollectorAdapter(CollectorMangerActivity.this, datas,cb_all,tvCollectEdit);
+                collects.setAdapter(adapter);
+
         }
 
+    }
+    private void updateUser() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(JSON,new Gson().toJson(user));
+        OkHttpUtils.put().requestBody(requestBody).url(Constants.CLIENT_USER).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e(TAG, "onError: "+e.getMessage() );
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                user = new Gson().fromJson(response,User.class);
+                CacheUtils.putString(CollectorMangerActivity.this,"user",new Gson().toJson(user,User.class));
+            }
+        });
     }
 /*
     public class MyStringCallback extends StringCallback {

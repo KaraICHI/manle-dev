@@ -11,22 +11,40 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/new_img_loading_2" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_marginTop="3dp"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="RMB"
+            android:textColor="#ff4242"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="88.00"
+            android:textColor="#ff4242" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="100dp"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ellipsize="end"
         android:lines="1"
-        android:textSize="14sp"
+        android:ellipsize="end"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:text="春如四季奇异果干*265g 约6袋"
-        android:textColor="#000" />
-
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="￥88.00"
-        android:textColor="#ff4242" />
+        android:textColor="#000"
+        android:textSize="14sp" />
 </LinearLayout>

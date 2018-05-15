@@ -61,7 +61,7 @@ public class RecommendGridViewAdapter extends BaseAdapter {
                 .load(Constants.BASE_SERVER_IMAGE +recommendInfoBean.getFigure())
                 .into(holder.ivRecommend);
         holder.tvName.setText(recommendInfoBean.getProductName());
-        holder.tvPrice.setText("RMB " + recommendInfoBean.getCoverPrice());
+        holder.tvPrice.setText( recommendInfoBean.getCoverPrice().toString());
         return convertView;
     }
 
