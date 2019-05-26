@@ -1,10 +1,5 @@
 # Shopping
-  硅谷商城[新]是一款按照企业级标准研发的项目。本套代码是目前国内市场第一套详细讲解商城类项目的免费代码。该代码中的内容包括但不仅限于，框架的搭建
-  、主页模块、分类模块、发现模块、购物车模块和个人中心模块。项目中讲解的主流技术包括且不限于RadioGroup + Fragment、OKHttp、FastJson、RecycleView、ScrollViewContainer、Banner、倒计时秒杀、自定义购物车、支付宝等技术。该项目中讲解的技术可应用在电商、新闻、旅游、医疗、在线教育等领域。
-  
-  尚硅谷官网：http://www.atguigu.com
-谷粉第48群：248070064
-作者：大海哥
+
 
 该项目一共分为6大功能模块：框架搭建、主页、购物车、分类、发现、个人中心。
 一、框架搭建模块技术包括：RadioGroup + Fragment;
@@ -40,4 +35,4 @@
 5、采用Html5和Android互调技术实现详情页面；
 6、集成支付宝支付功能；
 七、运行效果
-![image](https://github.com/atguigu01/Shopping/blob/master/gif/%E7%A1%85%E8%B0%B7%E5%95%86%E5%9F%8E%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA.gif)   
+(https://github.com/atguigu01/Shopping/blob/master/gif/%E7%A1%85%E8%B0%B7%E5%95%86%E5%9F%8E%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA.gif)   
